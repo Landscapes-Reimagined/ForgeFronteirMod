@@ -1,0 +1,149 @@
+---- Minecraft Crash Report ----
+// I let you down. Sorry :(
+
+Time: 2025-01-15 12:05:35
+Description: Mod loading error has occurred
+
+java.lang.Exception: Mod Loading has failed
+	at net.minecraftforge.logging.CrashReportExtender.dumpModLoadingCrashReport(CrashReportExtender.java:60) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading}
+	at net.minecraftforge.client.loading.ClientModLoader.completeModLoading(ClientModLoader.java:135) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.client.Minecraft.lambda$new$4(Minecraft.java:571) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:flywheel.mixins.json:PausedPartialTickAccessor,pl:mixin:APP:create.mixins.json:client.WindowResizeMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at net.minecraft.Util.ifElse(Util.java:421) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.client.Minecraft.lambda$new$5(Minecraft.java:564) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:flywheel.mixins.json:PausedPartialTickAccessor,pl:mixin:APP:create.mixins.json:client.WindowResizeMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at net.minecraftforge.client.loading.ForgeLoadingOverlay.render(ForgeLoadingOverlay.java:146) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading}
+	at net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:954) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:create.mixins.json:accessor.GameRendererAccessor,pl:mixin:APP:create.mixins.json:client.GameRendererMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1146) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:flywheel.mixins.json:PausedPartialTickAccessor,pl:mixin:APP:create.mixins.json:client.WindowResizeMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:flywheel.mixins.json:PausedPartialTickAccessor,pl:mixin:APP:create.mixins.json:client.WindowResizeMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.3.22_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:mixin,pl:runtimedistcleaner:A,re:classloading,pl:mixin:APP:flywheel.mixins.json:ClientMainMixin,pl:mixin:A,pl:runtimedistcleaner:A}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+	at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.22.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.22.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.22.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.22.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Suspected Mods: 
+	Create - Forge Frontier (forgefrontier), Version: 1.0-SNAPSHOT
+		Mixin class: com.landscapesreimagined.forgefrontier.mixin.createDDChanges.DDCreateMixin
+		Target: uwu.lopyluna.create_dd.DDCreate
+		at TRANSFORMER/create_dd@0.2c.PREBETA/uwu.lopyluna.create_dd.DDCreate.redirect$zza000$doNotRegisterFluidInteractions(DDCreate.java:545)
+
+	Create: Dreams & Desires (create_dd), Version: 0.2c.PREBETA
+		at TRANSFORMER/create_dd@0.2c.PREBETA/uwu.lopyluna.create_dd.DDCreate.redirect$zza000$doNotRegisterFluidInteractions(DDCreate.java:545)
+Stacktrace:
+	at uwu.lopyluna.create_dd.DDCreate.redirect$zza000$doNotRegisterFluidInteractions(DDCreate.java:545) ~[Create-Dreams-n-Desires-1.20.1-0.2c.PREBETA_mapped_parchment_2023.09.03-1.20.1.jar%23198!/:0.2c.PREBETA] {re:mixin,re:classloading,pl:mixin:APP:forgefrontier.mixins.json:createDDChanges.DDCreateMixin,pl:mixin:A}
+-- MOD create_dd --
+Details:
+	Mod File: /C:/Users/gamma/.gradle/caches/forge_gradle/deobf_dependencies/blank/Create-Dreams-n-Desires-1.20.1/0.2c.PREBETA_mapped_parchment_2023.09.03-1.20.1/Create-Dreams-n-Desires-1.20.1-0.2c.PREBETA_mapped_parchment_2023.09.03-1.20.1.jar
+	Failure message: Create: Dreams & Desires (create_dd) encountered an error during the common_setup event phase
+		java.lang.ClassCastException: class net.minecraftforge.fluids.ForgeFlowingFluid$Flowing cannot be cast to class net.minecraftforge.fluids.FluidInteractionRegistry$HasFluidInteraction (net.minecraftforge.fluids.ForgeFlowingFluid$Flowing and net.minecraftforge.fluids.FluidInteractionRegistry$HasFluidInteraction are in module forge@47.3.22 of loader 'TRANSFORMER' @42cc183e)
+	Mod Version: 0.2c.PREBETA
+	Mod Issue URL: NOT PROVIDED
+	Exception message: java.lang.ClassCastException: class net.minecraftforge.fluids.ForgeFlowingFluid$Flowing cannot be cast to class net.minecraftforge.fluids.FluidInteractionRegistry$HasFluidInteraction (net.minecraftforge.fluids.ForgeFlowingFluid$Flowing and net.minecraftforge.fluids.FluidInteractionRegistry$HasFluidInteraction are in module forge@47.3.22 of loader 'TRANSFORMER' @42cc183e)
+Stacktrace:
+	at uwu.lopyluna.create_dd.DDCreate.redirect$zza000$doNotRegisterFluidInteractions(DDCreate.java:545) ~[Create-Dreams-n-Desires-1.20.1-0.2c.PREBETA_mapped_parchment_2023.09.03-1.20.1.jar%23198!/:0.2c.PREBETA] {re:mixin,re:classloading,pl:mixin:APP:forgefrontier.mixins.json:createDDChanges.DDCreateMixin,pl:mixin:A}
+	at uwu.lopyluna.create_dd.DDCreate.init(DDCreate.java:116) ~[Create-Dreams-n-Desires-1.20.1-0.2c.PREBETA_mapped_parchment_2023.09.03-1.20.1.jar%23198!/:0.2c.PREBETA] {re:mixin,re:classloading,pl:mixin:APP:forgefrontier.mixins.json:createDDChanges.DDCreateMixin,pl:mixin:A}
+	at net.minecraftforge.eventbus.EventBus.doCastFilter(EventBus.java:260) ~[eventbus-6.0.5.jar%23114!/:?] {}
+	at net.minecraftforge.eventbus.EventBus.lambda$addListener$11(EventBus.java:252) ~[eventbus-6.0.5.jar%23114!/:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.5.jar%23114!/:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:296) ~[eventbus-6.0.5.jar%23114!/:?] {}
+	at net.minecraftforge.fml.javafmlmod.FMLModContainer.acceptEvent(FMLModContainer.java:121) ~[javafmllanguage-1.20.1-47.3.22.jar%23192!/:?] {}
+	at net.minecraftforge.fml.ModContainer.lambda$buildTransitionHandler$4(ModContainer.java:125) ~[fmlcore-1.20.1-47.3.22.jar%23195!/:?] {}
+	at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[?:?] {}
+	at java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796) ~[?:?] {}
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373) ~[?:?] {}
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182) ~[?:?] {}
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655) ~[?:?] {}
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622) ~[?:?] {}
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165) ~[?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.20.1
+	Minecraft Version ID: 1.20.1
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 17.0.12, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 989600096 bytes (943 MiB) / 1946157056 bytes (1856 MiB) up to 8401190912 bytes (8012 MiB)
+	CPUs: 16
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 9 8945HS w/ Radeon 780M Graphics
+	Identifier: AuthenticAMD Family 25 Model 117 Stepping 2
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.99
+	Number of physical packages: 1
+	Number of physical CPUs: 8
+	Number of logical CPUs: 16
+	Graphics card #0 name: NVIDIA GeForce RTX 4070 Laptop GPU
+	Graphics card #0 vendor: NVIDIA (0x10de)
+	Graphics card #0 VRAM (MB): 4095.00
+	Graphics card #0 deviceId: 0x2860
+	Graphics card #0 versionInfo: DriverVersion=32.0.15.6607
+	Graphics card #1 name: AMD Radeon 780M Graphics
+	Graphics card #1 vendor: Advanced Micro Devices, Inc. (0x1002)
+	Graphics card #1 VRAM (MB): 512.00
+	Graphics card #1 deviceId: 0x1900
+	Graphics card #1 versionInfo: DriverVersion=31.0.22060.5000
+	Memory slot #0 capacity (MB): 8192.00
+	Memory slot #0 clockSpeed (GHz): 7.50
+	Memory slot #0 type: Unknown
+	Memory slot #1 capacity (MB): 8192.00
+	Memory slot #1 clockSpeed (GHz): 7.50
+	Memory slot #1 type: Unknown
+	Memory slot #2 capacity (MB): 8192.00
+	Memory slot #2 clockSpeed (GHz): 7.50
+	Memory slot #2 type: Unknown
+	Memory slot #3 capacity (MB): 8192.00
+	Memory slot #3 clockSpeed (GHz): 7.50
+	Memory slot #3 type: Unknown
+	Virtual memory max (MB): 70957.31
+	Virtual memory used (MB): 42126.91
+	Swap memory total (MB): 38912.00
+	Swap memory used (MB): 318.10
+	JVM Flags: 2 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 10.0.9+10.0.9+main.dcd20f30
+	ModLauncher launch target: forgeclientuserdev
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		mixin-0.8.5.jar mixin PLUGINSERVICE 
+		eventbus-6.0.5.jar eventbus PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.22.jar slf4jfixer PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.22.jar object_holder_definalize PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.22.jar runtime_enum_extender PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.22.jar capability_token_subclass PLUGINSERVICE 
+		accesstransformers-8.0.4.jar accesstransformer PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.22.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-10.0.9.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-10.0.9.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		minecraft@1.0
+		lowcodefml@null
+		javafml@null
+	Mod List: 
+		forge-1.20.1-47.3.22_mapped_official_1.20.1-recomp|Minecraft                     |minecraft                     |1.20.1              |SIDED_SETU|Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		                                                  |Forge                         |forge                         |47.3.22             |SIDED_SETU|Manifest: NOSIGNATURE
+		flywheel-forge-1.20.1-0.6.11-13_mapped_parchment_2|Flywheel                      |flywheel                      |0.6.11-13           |SIDED_SETU|Manifest: NOSIGNATURE
+		create-1.20.1-0.5.1.j-55_mapped_parchment_2023.09.|Create                        |create                        |0.5.1.j-55          |SIDED_SETU|Manifest: NOSIGNATURE
+		Create-Dreams-n-Desires-1.20.1-0.2c.PREBETA_mapped|Create: Dreams & Desires      |create_dd                     |0.2c.PREBETA        |ERROR     |Manifest: NOSIGNATURE
+		main                                              |Create - Forge Frontier       |forgefrontier                 |1.0-SNAPSHOT        |SIDED_SETU|Manifest: NOSIGNATURE
+	Flywheel Backend: GL33 Instanced Arrays
+	Crash Report UUID: 6e81efd0-aced-45ab-9293-98ef9de04fcd
+	FML: 47.3
+	Forge: net.minecraftforge:47.3.22
