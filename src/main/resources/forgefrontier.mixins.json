@@ -6,7 +6,9 @@
   "refmap": "ForgeFrontier.refmap.json",
   "mixins": [
     "createDDChanges.DDCreateMixin",
-    "createDDChanges.RemoveLavaInteractionFluidEventsMixin"
+    "createDDChanges.RemoveLavaInteractionFluidEventsMixin",
+    "netherremastered.SealPeiceBottomRightNoCrumbleMixin",
+    "netherremastered.SealPeiceTopLeftNoCrumbleMixin"
   ],
   "client": [
   ],

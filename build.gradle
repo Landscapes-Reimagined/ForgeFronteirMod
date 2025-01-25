@@ -138,6 +138,7 @@ repositories {
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
+
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
      flatDir {
@@ -148,6 +149,38 @@ repositories {
         name = 'tterrag maven'
         url = 'https://maven.tterrag.com/'
     }
+
+    maven {
+        // Shedaniel's maven (Architectury API)
+        url = "https://maven.architectury.dev"
+        content {
+            includeGroup "dev.architectury"
+        }
+    }
+
+    maven {
+        url = "https://www.cursemaven.com"
+        allowInsecureProtocol = true
+    }
+
+    maven {
+        // saps.dev Maven (KubeJS and Rhino)
+        url = "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
+        }
+    }
+
+    maven {
+        url 'https://jitpack.io'
+        content {
+            includeGroup "com.github.rtyley"
+        }
+    }
+
+    maven { url "https://maven.architectury.dev/" }
+//    mavenCentral()
+//    mavenLocal()
 }
 
 dependencies {
@@ -158,6 +191,9 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
@@ -167,19 +203,61 @@ dependencies {
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"
-     implementation fg.deobf("blank:Create-Dreams-n-Desires-${minecraft_version}:${createdd_version}")
+
+    //Mods
+    //Create: Dreams and Desires
+     implementation fg.deobf("locallibs:Create-Dreams-n-Desires-${minecraft_version}:${createdd_version}")
+
+
+    //FTB Quests
+//    implementation fg.deobf("locallibs:ftb-quests-forge:${ftb_quests_version}")
+
+
+    //Create
+    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+
+
+    //Molten Vents
+    implementation fg.deobf("locallibs:molten_vents-${minecraft_version}:${molten_vents_version}")
+
+
+    //ArchitecturyAPI
+    implementation fg.deobf("dev.architectury:architectury-forge:9.2.14")
+
+
+
+    //KubeJS
+    implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
+    implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+
+    implementation fg.deobf("locallibs:moonlight:${moonlight_version}")
+    implementation fg.deobf("locallibs:nether_remastered:${nether_remastered}")
+
+
+
+//    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+//    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+//        jarJar.ranged(it, "[0.4.1,)")
+//    }
+
+
+
+//    implementation annotationProcessor("locallibs:mixinextras-common:${mixin_extras}")
+//    implementation fg.deobf("locallibs:mixinextras-forge:${mixin_extras}")
+
+
+
+
+
+
+
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
-
-
-    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
-    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 
 
