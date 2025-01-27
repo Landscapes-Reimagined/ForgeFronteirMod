@@ -90,3 +90,10 @@ mandatory = true
 versionRange="[0.5.1.f,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "nether_remastered"
+mandatory = true
+versionRange="[2.2,)"
+ordering = "NONE"
+side = "BOTH"
