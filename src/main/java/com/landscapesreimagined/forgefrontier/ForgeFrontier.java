@@ -1,5 +1,6 @@
 package com.landscapesreimagined.forgefrontier;
 
+import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
 import com.mojang.logging.LogUtils;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.Minecraft;
@@ -40,9 +41,7 @@ public class ForgeFrontier {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final DeferredRegister<Item> MOD_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
-    public static final RegistryObject<Item> ANIM_TEST = MOD_ITEMS.register("animation_test", () -> new Item(new Item.Properties()));
 
 
     public ForgeFrontier() {
@@ -53,7 +52,7 @@ public class ForgeFrontier {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        MOD_ITEMS.register(modEventBus);
+        ModItems.MOD_ITEMS.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
