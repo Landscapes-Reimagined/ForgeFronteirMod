@@ -31,7 +31,7 @@ public abstract class TextureAdderFix {
 
     @Shadow(remap = false) private double width;
 
-    @Shadow private Chapter chapter;
+    @Shadow(remap = false) private Chapter chapter;
 
     /**
      * @author gamma_02
