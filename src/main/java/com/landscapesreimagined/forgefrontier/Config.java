@@ -1,5 +1,6 @@
 package com.landscapesreimagined.forgefrontier;
 
+import com.landscapesreimagined.forgefrontier.ForgeFrontier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
