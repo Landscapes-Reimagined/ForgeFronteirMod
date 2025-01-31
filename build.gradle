@@ -188,6 +188,16 @@ repositories {
     }
 
     maven { url "https://maven.architectury.dev/" }
+
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
+
 //    mavenCentral()
 //    mavenLocal()
 }
@@ -250,8 +260,21 @@ dependencies {
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
     implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
 
+    //Moonlight Lib
     implementation fg.deobf("locallibs:moonlight:${moonlight_version}")
+
+
+    //Nether Remastered
     implementation fg.deobf("locallibs:nether_remastered:${nether_remastered}")
+
+
+    //Create: Teleporters
+    implementation fg.deobf("curse.maven:create-teleporters-829272:${create_teleporters}")
+
+    //GeckoLib
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+    implementation("com.eliotlash.mclib:mclib:20")
+
 
 
 
@@ -298,7 +321,8 @@ tasks.named('processResources', ProcessResources).configure {
 
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]
-    }}
+    }
+}
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {

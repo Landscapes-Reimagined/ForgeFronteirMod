@@ -111,3 +111,10 @@ mandatory = true
 versionRange="[2001.2.2]"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "createteleporters"
+mandatory = true
+versionRange="[2.2,)"
+ordering = "NONE"
+side = "BOTH"

@@ -7,13 +7,14 @@
   "mixins": [
     "createDDChanges.DDCreateMixin",
     "createDDChanges.RemoveLavaInteractionFluidEventsMixin",
-
+    "CreateTeleporters.FluidTankAccessor",
+    "CreateTeleporters.RewritePortalTicker",
     "netherremastered.SealPeiceBottomRightNoCrumbleMixin",
     "netherremastered.SealPeiceTopLeftNoCrumbleMixin"
   ],
   "client": [
-    "FTBQuests.TextureAdderFix",
-    "FTBQuests.AddMcMetaToImage"
+    "FTBQuests.AddMcMetaToImage",
+    "FTBQuests.TextureAdderFix"
   ],
   "injectors": {
     "defaultRequire": 1
