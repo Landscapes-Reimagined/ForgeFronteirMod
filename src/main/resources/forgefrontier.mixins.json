@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.landscapesreimagined.forgefrontier.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "ForgeFrontier.refmap.json",
+  "refmap": "forgefrontier.refmap.json",
   "mixins": [
     "createDDChanges.DDCreateMixin",
     "createDDChanges.RemoveLavaInteractionFluidEventsMixin",

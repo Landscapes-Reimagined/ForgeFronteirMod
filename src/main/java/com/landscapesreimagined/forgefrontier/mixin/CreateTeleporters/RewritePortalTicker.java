@@ -2,7 +2,6 @@ package com.landscapesreimagined.forgefrontier.mixin.CreateTeleporters;
 
 import com.landscapesreimagined.forgefrontier.mixinInterfaces.AccessFluidTank;
 import com.landscapesreimagined.forgefrontier.util.BlockSearchDir;
-import com.mojang.realmsclient.util.LevelType;
 import net.createteleporters.CreateteleportersMod;
 import net.createteleporters.block.CustomPortalOnBlock;
 import net.createteleporters.block.entity.CustomPortalOnTileEntity;
@@ -13,7 +12,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -34,20 +32,16 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(CustomPortalOnBlock.class)
@@ -58,7 +52,7 @@ public class RewritePortalTicker {
 
 
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/createteleporters/procedures/CustomPortalOnUpdateTickProcedure;execute(Lnet/minecraft/world/level/LevelAccessor;DDD)V"), remap = false)
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/createteleporters/procedures/CustomPortalOnUpdateTickProcedure;execute(Lnet/minecraft/world/level/LevelAccessor;DDD)V", remap = false), remap = true)
     public void execute(final LevelAccessor world, double x, double y, double z) {
         BlockPos block = BlockPos.containing(x, y, z);
 
