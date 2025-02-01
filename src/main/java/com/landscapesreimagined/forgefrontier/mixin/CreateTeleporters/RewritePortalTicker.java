@@ -8,7 +8,6 @@ import net.createteleporters.block.entity.CustomPortalOnTileEntity;
 import net.createteleporters.init.CreateteleportersModBlocks;
 import net.createteleporters.init.CreateteleportersModFluids;
 import net.createteleporters.init.CreateteleportersModParticleTypes;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,7 +51,7 @@ public class RewritePortalTicker {
 
 
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/createteleporters/procedures/CustomPortalOnUpdateTickProcedure;execute(Lnet/minecraft/world/level/LevelAccessor;DDD)V", remap = false), remap = true)
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/createteleporters/procedures/CustomPortalOnUpdateTickProcedure;execute(Lnet/minecraft/world/level/LevelAccessor;DDD)V", remap = false))
     public void execute(final LevelAccessor world, double x, double y, double z) {
         BlockPos block = BlockPos.containing(x, y, z);
 
@@ -134,7 +133,7 @@ public class RewritePortalTicker {
             CreateteleportersMod.LOGGER.info("Teleporting " + entity.getDisplayName().getString() + " to " + tpPos + " in dimension " + dimensionID);
 
             if(!(world instanceof ServerLevel serverLevel)){
-                if(world instanceof ClientLevel clientLevel) clientLevel.playLocalSound(x, y, z, SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.2F, 1.0F, false);
+//                if(world instanceof ClientLevel clientLevel) clientLevel.playLocalSound(x, y, z, SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.2F, 1.0F, false);
                 continue;
             }
 
@@ -164,9 +163,7 @@ public class RewritePortalTicker {
 
             });
 
-            CreateteleportersMod.queueServerWork(25, () -> {
-                tankAccessor.getFluidTank().drain(250, IFluidHandler.FluidAction.EXECUTE);
-            });
+            CreateteleportersMod.queueServerWork(25, () -> tankAccessor.getFluidTank().drain(250, IFluidHandler.FluidAction.EXECUTE));
 
 
         }
