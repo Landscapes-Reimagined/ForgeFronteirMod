@@ -19,6 +19,8 @@ plugins {
 
 }
 
+jarJar.enable()
+
 apply plugin: 'org.spongepowered.mixin'
 
 group = mod_group_id
@@ -154,10 +156,15 @@ repositories {
          dir 'libs'
      }
 
+    //hrmmmmmmmMMMMMMMMMMMMMMMMMMMM
     maven {
         name = 'tterrag maven'
         url = 'https://maven.tterrag.com/'
     }
+
+//    maven { // Registrate
+//        url "https://maven.tterrag.com/"
+//    }
 
     maven {
         // Shedaniel's maven (Architectury API)
@@ -198,8 +205,24 @@ repositories {
         }
     }
 
+    maven {
+        // location of the maven that hosts JEI files before January 2023
+        name = "Progwml6's maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+
 //    mavenCentral()
-//    mavenLocal()
+    mavenLocal()
 }
 
 dependencies {
@@ -211,6 +234,11 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // MC<minecraft_version>-<registrate_version>
+//    implementation fg.deobf("com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}")
+//    // [MC<minecraft_version>,MC<next_minecraft_version>)
+//    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[MC1.19.3,MC1.20)")
 
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
@@ -244,8 +272,9 @@ dependencies {
     //Create
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
+    //Registrate
+    implementation fg.deobf("com.tterrag.registrate:Registrate:MC${trunc_mc_version}-${registrate_version}")
 
     //Molten Vents
     implementation fg.deobf("locallibs:molten_vents-${minecraft_version}:${molten_vents_version}")
@@ -254,11 +283,10 @@ dependencies {
     //ArchitecturyAPI
     implementation fg.deobf("dev.architectury:architectury-forge:9.2.14")
 
-
-
     //KubeJS
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
     implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+
 
     //Moonlight Lib
     implementation fg.deobf("locallibs:moonlight:${moonlight_version}")
@@ -274,6 +302,23 @@ dependencies {
     //GeckoLib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     implementation("com.eliotlash.mclib:mclib:20")
+
+
+    //JEI
+    // compile against the JEI API but do not include it at runtime
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+    //Create: Additions(For Fluid Blazes)
+    implementation fg.deobf("curse.maven:createaddition-439890:${create_additions_version}")
+
+    //Pipez
+    implementation fg.deobf("curse.maven:pipez-443900:${pipez_version}")
+
+
+    //Create: New Age (Energy stuff, dw about it)
+//    implementation fg.deobf("curse.maven:create-new-age-905861:${new_age_version}")
 
 
 
@@ -340,7 +385,23 @@ tasks.named('jar', Jar).configure {
 
     // This is the preferred method to reobfuscate your jar file
     finalizedBy 'reobfJar'
+//    classifier 'slim'
 }
+
+//jar {
+//    classifier 'slim'
+//}
+
+reobf {
+    jarJar { }
+}
+
+tasks.jarJar.finalizedBy('reobfJarJar')
+
+//tasks.jarJar.configure {
+//    classifier ''
+//}
+
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
