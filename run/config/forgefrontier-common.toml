@@ -1,10 +1,21 @@
-#Whether to log the dirt block on common setup
-logDirtBlock = true
-#A magic number
-#Range: > 0
-magicNumber = 42
-#What you want the introduction message to be for the magic number
-magicNumberIntroduction = "The magic number is... "
-#A list of items to log on common setup.
-items = ["minecraft:iron_ingot"]
+
+#Machine Settings
+[machines]
+	#Default internal energy capacity of Forge Frontier machines
+	#Range: > 0
+	default_machine_internal_energy_capacity = 500000
+	#Default internal energy max insert rate of Forge Frontier machines
+	#Range: > 0
+	default_machine_energy_insert_rate = 4096
+	#Default internal energy max extract rate of Forge Frontier machines
+	#NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!
+	#Range: > 0
+	default_machine_internal_capacity = 4096
+	#
+	#Default Energetic Blaze energy capacity
+	#Range: > 0
+	energetic_blaze_energy_capacity = 500000
+	#Default Energetic Blaze maximum energy receive rate
+	#Range: > 0
+	energetic_blaze_energy_receive = 32768
 
