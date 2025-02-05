@@ -1,10 +1,16 @@
 package com.landscapesreimagined.forgefrontier;
 
+import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
+import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -41,6 +47,25 @@ public class ForgeFrontier {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    private static final DeferredRegister<CreativeModeTab> TAB_DEFERRED_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+
+    public static final RegistryObject<CreativeModeTab> MOD_TAB =
+            TAB_DEFERRED_REGISTER.register("forge_frontier_tab",
+                    () -> CreativeModeTab.builder()
+                            .title(Component.translatable("itemGroup.forgefrontier.forge_frontier_tab"))
+                            .icon(() -> ModItems.GLOBE_ANIM_TEST.get().getDefaultInstance())
+                            .displayItems((itemDisplayParameters, output) -> {
+                                output.accept(ModItems.EMPTY_BLAZE_BURNER);
+                                output.accept(ModItems.GLOBE_ANIM_TEST.get());
+                                output.accept(ModItems.ANIM_TEST.get());
+                                output.accept(ModItems.NOVA_ANIM_TEST.get());
+                                output.accept(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.asItem());
+                            })
+                            .build());
+
+    public static final CreateRegistrate FORGE_FRONTIER_REGISTRATE = CreateRegistrate.create(MODID);
+
+
 
 
 
@@ -54,10 +79,17 @@ public class ForgeFrontier {
 
         ModItems.MOD_ITEMS.register(modEventBus);
 
+        TAB_DEFERRED_REGISTER.register(modEventBus);
+
+        FORGE_FRONTIER_REGISTRATE.registerEventListeners(modEventBus);
+
+        ModItems.register();
+        ModBlocks.register();
+        ModBlockEntities.register();
+
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
-
 
 
 
