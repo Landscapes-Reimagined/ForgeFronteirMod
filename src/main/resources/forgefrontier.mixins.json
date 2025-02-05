@@ -9,8 +9,11 @@
     "createDDChanges.RemoveLavaInteractionFluidEventsMixin",
     "CreateTeleporters.FluidTankAccessor",
     "CreateTeleporters.RewritePortalTicker",
+    "Minecraft.LivingEntityMixin",
     "netherremastered.SealPeiceBottomRightNoCrumbleMixin",
-    "netherremastered.SealPeiceTopLeftNoCrumbleMixin"
+    "netherremastered.SealPeiceTopLeftNoCrumbleMixin",
+    "netherremastered.SealPieceBottomLeftNoDropMixin",
+    "netherremastered.SealPieceTopRightNoDropMixin"
   ],
   "client": [
     "FTBQuests.AddMcMetaToImage",
