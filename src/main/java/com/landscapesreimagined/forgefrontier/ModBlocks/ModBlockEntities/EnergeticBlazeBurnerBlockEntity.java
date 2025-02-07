@@ -1,10 +1,12 @@
 package com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities;
 
 import com.landscapesreimagined.forgefrontier.Config;
+import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.util.MachineInternalEnergyBuffer;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +27,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
 
 
 
+
     public EnergeticBlazeBurnerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.energyBuffer = new MachineInternalEnergyBuffer(Config.ENERGETIC_BLAZE_CAPACITY.get(), Config.ENERGETIC_BLAZE_MAX_RECEIVE.get());
@@ -32,14 +35,36 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     }
 
 
-    //TODO: recipes and energy
+    //TODO: recipes and requiredEnergy
     @Override
     public void tick() {
         super.tick();
 
 
+
+
     }
 
+//    public EnergeticBlazeBurner.EnergyLevel getEnergyLevel(){
+//
+//    }
+
+
+    public LerpedFloat getHeadAnimation(){
+        return this.headAnimation;
+    }
+
+    public LerpedFloat getHeadAngle(){
+        return this.headAngle;
+    }
+
+    public boolean hasGoggles(){
+        return this.goggles;
+    }
+
+    public boolean hasHat(){
+        return this.hat;
+    }
 
 
     @Override
@@ -109,5 +134,9 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     @Override
     public boolean canReceive() {
         return this.energyBuffer.canReceive();
+    }
+
+    public EnergeticBlazeBurner.EnergyLevel getEnergyLevelFromBlock() {
+        return EnergeticBlazeBurner.getEnergyLevelOf(this.getBlockState());
     }
 }

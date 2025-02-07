@@ -3,6 +3,7 @@ package com.landscapesreimagined.forgefrontier;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
+import com.landscapesreimagined.forgefrontier.recipies.ForgeFronteirRecipieTypes;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.Registrate;
@@ -44,8 +45,7 @@ public class ForgeFrontier {
 
     // Define mod id in a common place for everything to reference
     public static final String MODID = "forgefrontier";
-    // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     private static final DeferredRegister<CreativeModeTab> TAB_DEFERRED_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
@@ -86,6 +86,8 @@ public class ForgeFrontier {
         ModItems.register();
         ModBlocks.register();
         ModBlockEntities.register();
+
+        ForgeFronteirRecipieTypes.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);

@@ -30,14 +30,14 @@ public class Config
     static{
         BUILDER.comment("Machine Settings").push(CATEGORY_MACHINES);
 
-        DEFAULT_MACHINE_INTERNAL_ENERGY_CAPACITY = BUILDER.comment("Default internal energy capacity of Forge Frontier machines").defineInRange("default_machine_internal_energy_capacity", 500000, 0, Integer.MAX_VALUE);
-        DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT = BUILDER.comment("Default internal energy max insert rate of Forge Frontier machines").defineInRange("default_machine_energy_insert_rate", 4096, 0, Integer.MAX_VALUE);
-        DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT = BUILDER.comment("Default internal energy max extract rate of Forge Frontier machines").comment("NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!").defineInRange("default_machine_internal_capacity", 4096, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_CAPACITY = BUILDER.comment("Default internal requiredEnergy capacity of Forge Frontier machines").defineInRange("default_machine_internal_energy_capacity", 500000, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT = BUILDER.comment("Default internal requiredEnergy max insert rate of Forge Frontier machines").defineInRange("default_machine_energy_insert_rate", 4096, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT = BUILDER.comment("Default internal requiredEnergy max extract rate of Forge Frontier machines").comment("NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!").defineInRange("default_machine_internal_capacity", 4096, 0, Integer.MAX_VALUE);
 
         BUILDER.comment("");
 
-        ENERGETIC_BLAZE_CAPACITY = BUILDER.comment("Default Energetic Blaze energy capacity").defineInRange("energetic_blaze_energy_capacity", 500000, 0, Integer.MAX_VALUE);
-        ENERGETIC_BLAZE_MAX_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum energy receive rate").defineInRange("energetic_blaze_energy_receive", 32768/*2 ^ 15*/, 0, Integer.MAX_VALUE);
+        ENERGETIC_BLAZE_CAPACITY = BUILDER.comment("Default Energetic Blaze requiredEnergy capacity").defineInRange("energetic_blaze_energy_capacity", 500000, 0, Integer.MAX_VALUE);
+        ENERGETIC_BLAZE_MAX_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum requiredEnergy receive rate").defineInRange("energetic_blaze_energy_receive", 32768/*2 ^ 15*/, 0, Integer.MAX_VALUE);
 
 
         SPEC = BUILDER.build();

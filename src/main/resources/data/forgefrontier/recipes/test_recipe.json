@@ -1,0 +1,17 @@
+{
+  "type": "forgefrontier:energetic_mixing",
+  "heatRequirement": "superheated",
+  "requiredEnergy": 100000,
+  "requiredEnergyLevel": "none",
+  "ingredients": [
+    {
+      "tag": "forge:cobblestone"
+    }
+  ],
+  "results": [
+    {
+      "amount": 50,
+      "fluid": "minecraft:lava"
+    }
+  ]
+}

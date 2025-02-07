@@ -1,21 +1,21 @@
 
 #Machine Settings
 [machines]
-	#Default internal energy capacity of Forge Frontier machines
+	#Default internal requiredEnergy capacity of Forge Frontier machines
 	#Range: > 0
 	default_machine_internal_energy_capacity = 500000
-	#Default internal energy max insert rate of Forge Frontier machines
+	#Default internal requiredEnergy max insert rate of Forge Frontier machines
 	#Range: > 0
 	default_machine_energy_insert_rate = 4096
-	#Default internal energy max extract rate of Forge Frontier machines
+	#Default internal requiredEnergy max extract rate of Forge Frontier machines
 	#NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!
 	#Range: > 0
 	default_machine_internal_capacity = 4096
 	#
-	#Default Energetic Blaze energy capacity
+	#Default Energetic Blaze requiredEnergy capacity
 	#Range: > 0
 	energetic_blaze_energy_capacity = 500000
-	#Default Energetic Blaze maximum energy receive rate
+	#Default Energetic Blaze maximum requiredEnergy receive rate
 	#Range: > 0
 	energetic_blaze_energy_receive = 32768
 

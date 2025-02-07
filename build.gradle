@@ -301,7 +301,7 @@ dependencies {
 
 
     //Create: Teleporters
-    implementation fg.deobf("curse.maven:create-teleporters-829272:${create_teleporters}")
+    implementation fg.deobf("curse.maven:create-teleporters-829272:${create_teleporters_file}")
 
     //GeckoLib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
@@ -323,10 +323,10 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     //Create: Additions(For Fluid Blazes)
-    implementation fg.deobf("curse.maven:createaddition-439890:${create_additions_version}")
+    implementation fg.deobf("curse.maven:createaddition-439890:${create_additions_file}")
 
     //Pipez
-    implementation fg.deobf("curse.maven:pipez-443900:${pipez_version}")
+    implementation fg.deobf("curse.maven:pipez-443900:${pipez_file}")
 
 
     //Create: New Age (Energy stuff, dw about it)

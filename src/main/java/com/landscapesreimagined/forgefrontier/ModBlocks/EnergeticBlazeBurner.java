@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergeticBlazeBurner extends BlazeBurnerBlock {
+
     public static final EnumProperty<EnergyLevel> ENERGY_LEVEL = EnumProperty.create("energy_level", EnergyLevel.class);
 
 
@@ -65,6 +66,11 @@ public class EnergeticBlazeBurner extends BlazeBurnerBlock {
                 .setValue(FACING, context.getHorizontalDirection()
                         .getOpposite())
                 .setValue(ENERGY_LEVEL, energyLevel);
+    }
+
+    public static EnergyLevel getEnergyLevelOf(BlockState blockState) {
+        return blockState.hasProperty(ENERGY_LEVEL) ? blockState.getValue(ENERGY_LEVEL)
+                : EnergyLevel.NONE;
     }
 
 

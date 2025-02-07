@@ -123,7 +123,7 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
     public CompoundTag writeToTag(){
         CompoundTag tag = new CompoundTag();
 
-        tag.putInt("energy", this.energy);
+        tag.putInt("requiredEnergy", this.energy);
 
         tag.putInt("capacity", this.capacity);
         tag.putInt("insert", this.maxInsert);
@@ -136,7 +136,7 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
     }
 
     public void readTag(CompoundTag tag){
-        this.energy = tag.getInt("energy");
+        this.energy = tag.getInt("requiredEnergy");
         this.capacity = tag.getInt("capacity");
         this.maxInsert = tag.getInt("insert");
 
