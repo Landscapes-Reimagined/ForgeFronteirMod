@@ -15,10 +15,7 @@
     "netherremastered.SealPieceBottomLeftNoDropMixin",
     "netherremastered.SealPieceTopRightNoDropMixin"
   ],
-  "client": [
-    "FTBQuests.AddMcMetaToImage",
-    "FTBQuests.TextureAdderFix"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

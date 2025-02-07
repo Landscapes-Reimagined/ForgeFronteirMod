@@ -101,7 +101,7 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId = "ftbquests"
 mandatory = true
-versionRange="[2001.4.10]"
+versionRange="[2001.4.11]"
 ordering = "NONE"
 side = "BOTH"
 
