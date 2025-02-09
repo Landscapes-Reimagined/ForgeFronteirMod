@@ -4,11 +4,17 @@ import com.google.gson.JsonObject;
 import com.landscapesreimagined.forgefrontier.mixinInterfaces.EnergeticMixingProcessingRecipeParams;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.item.SmartInventory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 public class EnergeticMixingRecipe extends MixingRecipe {
+
+
+
 
     protected int requiredEnergy;
     protected EnergyCondition requiredEnergyLevel;
@@ -27,6 +33,14 @@ public class EnergeticMixingRecipe extends MixingRecipe {
         this.requiredEnergy = GsonHelper.getAsInt(json, "requiredEnergy");
 //                json.getAsJsonObject("requiredEnergy").getAsInt();
         this.requiredEnergyLevel = EnergyCondition.deserialize(GsonHelper.getAsString(json, "requiredEnergyLevel"));
+    }
+
+    public int getRequiredEnergy() {
+        return requiredEnergy;
+    }
+
+    public EnergyCondition getRequiredEnergyLevel() {
+        return requiredEnergyLevel;
     }
 
     @Override
@@ -50,5 +64,10 @@ public class EnergeticMixingRecipe extends MixingRecipe {
         super.writeAdditional(buffer);
         buffer.writeInt(this.requiredEnergy);
         buffer.writeEnum(this.requiredEnergyLevel);
+    }
+
+    @Override
+    public boolean matches(SmartInventory inv, @NotNull Level worldIn) {
+        return super.matches(inv, worldIn);
     }
 }

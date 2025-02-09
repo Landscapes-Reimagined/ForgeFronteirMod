@@ -55,7 +55,6 @@ public class RewritePortalTicker {
     public void execute(final LevelAccessor world, double x, double y, double z) {
         BlockPos block = BlockPos.containing(x, y, z);
 
-
         //don't run the tick loop on the client
 
         //don't continue ticking if the block entity isn't the CustomPortalOnTileEntity
@@ -167,18 +166,6 @@ public class RewritePortalTicker {
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 

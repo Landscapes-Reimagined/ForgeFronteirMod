@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "create:block/blaze_burner/block"
+      "model": "forgefrontier:block/blaze_burner/block"
     }
   }
 }

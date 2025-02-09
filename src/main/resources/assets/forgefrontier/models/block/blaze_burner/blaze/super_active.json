@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "create:block/blaze_super_active"
+		"1": "forgefrontier:block/blaze_super_active"
 	},
 	"elements": [
 		{

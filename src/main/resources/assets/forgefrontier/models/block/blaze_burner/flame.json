@@ -2,8 +2,8 @@
 	"parent": "block/block",
 	"loader": "forge:obj",
 	"flip_v": true,
-	"model": "create:models/block/blaze_burner/blaze_flame.obj",
+	"model": "forgefrontier:models/block/blaze_burner/blaze_flame.obj",
 	"textures": {
-		"0": "create:block/blaze_burner_flame"
+		"0": "forgefrontier:block/blaze_burner_flame"
 	}
 }

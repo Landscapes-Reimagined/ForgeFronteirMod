@@ -3,8 +3,10 @@ package com.landscapesreimagined.forgefrontier;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
+import com.landscapesreimagined.forgefrontier.client.ForgeFrontierClient;
 import com.landscapesreimagined.forgefrontier.recipies.ForgeFronteirRecipieTypes;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -27,6 +29,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -88,6 +91,9 @@ public class ForgeFrontier {
         ModBlockEntities.register();
 
         ForgeFronteirRecipieTypes.register(modEventBus);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeFrontierClient.onCtorClient(modEventBus));
+
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "create:block/blaze_idle",
-		"particle": "create:block/blaze_idle"
+		"2": "forgefrontier:block/blaze_idle",
+		"particle": "forgefrontier:block/blaze_idle"
 	},
 	"elements": [
 		{

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "create:block/blaze_inert",
-		"particle": "create:block/blaze_inert"
+		"2": "forgefrontier:block/blaze_inert",
+		"particle": "forgefrontier:block/blaze_inert"
 	},
 	"elements": [
 		{

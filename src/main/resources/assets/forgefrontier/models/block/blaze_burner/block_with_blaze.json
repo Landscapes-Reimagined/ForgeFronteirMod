@@ -2,10 +2,10 @@
 	"parent": "block/block",
 	"loader": "forge:obj",
 	"flip_v": true,
-	"model": "create:models/block/blaze_burner/item.obj",
+	"model": "forgefrontier:models/block/blaze_burner/item.obj",
 	"textures": {
-		"0": "create:block/blaze_heater_brazier",
-		"1": "create:block/blaze_idle",
+		"0": "forgefrontier:block/blaze_heater_brazier",
+		"1": "forgefrontier:block/blaze_idle",
 		"particle": "create:block/dark_metal_block"
 	},
 	"display": {

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "forgefrontier.refmap.json",
   "mixins": [
+    "Create.CurrentBasinRecipeAccessor",
     "Create.EnergeticMixingProcessingRecipeInjector",
     "Create.EnergeticMixingRecipeBuilderInejctor",
     "createDDChanges.DDCreateMixin",

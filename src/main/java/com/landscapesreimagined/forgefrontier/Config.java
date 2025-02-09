@@ -1,6 +1,5 @@
 package com.landscapesreimagined.forgefrontier;
 
-import com.landscapesreimagined.forgefrontier.util.MachineInternalEnergyBuffer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,8 +23,10 @@ public class Config
     public static final ForgeConfigSpec.IntValue DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT;
     public static final ForgeConfigSpec.IntValue DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT;
 
-    public static final ForgeConfigSpec.IntValue ENERGETIC_BLAZE_CAPACITY;
-    public static final ForgeConfigSpec.IntValue ENERGETIC_BLAZE_MAX_RECEIVE;
+    public static final ForgeConfigSpec.IntValue ENERGETIC_BLAZE_FE_CAPACITY;
+    public static final ForgeConfigSpec.IntValue ENERGETIC_BLAZE_MAX_FE_RECEIVE;
+    public static final ForgeConfigSpec.DoubleValue ENERGETIC_BLAZE_AE_CAPACITY;
+    public static final ForgeConfigSpec.DoubleValue ENERGETIC_BLAZE_MAX_AE_RECEIVE;
 
     static{
         BUILDER.comment("Machine Settings").push(CATEGORY_MACHINES);
@@ -36,8 +37,11 @@ public class Config
 
         BUILDER.comment("");
 
-        ENERGETIC_BLAZE_CAPACITY = BUILDER.comment("Default Energetic Blaze requiredEnergy capacity").defineInRange("energetic_blaze_energy_capacity", 500000, 0, Integer.MAX_VALUE);
-        ENERGETIC_BLAZE_MAX_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum requiredEnergy receive rate").defineInRange("energetic_blaze_energy_receive", 32768/*2 ^ 15*/, 0, Integer.MAX_VALUE);
+        ENERGETIC_BLAZE_FE_CAPACITY = BUILDER.comment("Default Energetic Blaze FE energy capacity").defineInRange("energetic_blaze_energy_capacity", 500000, 0, Integer.MAX_VALUE);
+        ENERGETIC_BLAZE_MAX_FE_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum FE energy receive rate").defineInRange("energetic_blaze_energy_receive", 32768/*2 ^ 15*/, 0, Integer.MAX_VALUE);
+
+        ENERGETIC_BLAZE_AE_CAPACITY = BUILDER.comment("Default Energetic Blaze AE energy capacity").defineInRange("energetic_blaze_ae_energy_capacity", 5000000, 0, Double.MAX_VALUE);
+        ENERGETIC_BLAZE_MAX_AE_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum energy receive rate").defineInRange("energetic_blaze_max_ae_receive", 327680, 0, Double.MAX_VALUE);
 
 
         SPEC = BUILDER.build();
