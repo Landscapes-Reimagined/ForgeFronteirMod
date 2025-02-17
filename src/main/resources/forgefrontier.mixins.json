@@ -5,9 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "forgefrontier.refmap.json",
   "mixins": [
+    "Create.BasinOperatingBlockMixin",
+    "Create.BasinRecipeMixin",
     "Create.CurrentBasinRecipeAccessor",
     "Create.EnergeticMixingProcessingRecipeInjector",
     "Create.EnergeticMixingRecipeBuilderInejctor",
+    "Create.MechanicalMixerMixin",
     "createDDChanges.DDCreateMixin",
     "createDDChanges.RemoveLavaInteractionFluidEventsMixin",
     "CreateTeleporters.FluidTankAccessor",

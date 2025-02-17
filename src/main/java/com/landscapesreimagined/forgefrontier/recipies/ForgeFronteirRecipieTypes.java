@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 public enum ForgeFronteirRecipieTypes implements IRecipeTypeInfo {
     ENERGETIC_MIXING(EnergeticMixingRecipe::new, new ResourceLocation(ForgeFrontier.MODID, "energetic_mixing"));
 

@@ -1,8 +1,8 @@
 {
   "type": "forgefrontier:energetic_mixing",
-  "heatRequirement": "superheated",
+  "heatRequirement": "heated",
   "requiredEnergy": 100000,
-  "requiredEnergyLevel": "none",
+  "requiredEnergyLevel": "crystallize",
   "ingredients": [
     {
       "tag": "forge:cobblestone"

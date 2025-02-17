@@ -1,0 +1,24 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "forgefrontier:block/energetic_blaze_infuse_lights_open_2",
+		"3": "forgefrontier:block/energetic_blaze_infuse_lights",
+		"particle": "forgefrontier:block/energetic_blaze_infuse_lights"
+	},
+	"elements": [
+		{
+			"name": "Blaze 5",
+			"from": [4, 6, 4],
+			"to": [12, 14, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 6, 6]},
+			"faces": {
+				"north": {"uv": [8, 0, 16, 8], "texture": "#3"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#3"},
+				"down": {"uv": [8, 8, 16, 16], "texture": "#3"}
+			}
+		}
+	]
+}

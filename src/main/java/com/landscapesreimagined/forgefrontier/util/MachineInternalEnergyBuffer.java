@@ -2,6 +2,7 @@ package com.landscapesreimagined.forgefrontier.util;
 
 import com.landscapesreimagined.forgefrontier.Config;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -34,6 +35,10 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
         this.canExtract = canExtract;
     }
 
+    public MachineInternalEnergyBuffer(int capacity, int maxInsert, int useRate){
+        this(capacity, maxInsert, useRate, false);
+    }
+
     public MachineInternalEnergyBuffer(int capacity, int maxInsert){
         this(capacity, maxInsert, Config.DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT.get(), false);//arbitrary constant lol
     }
@@ -46,6 +51,11 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
         if(this.energy > this.capacity){
             this.energy = this.capacity;
         }
+    }
+
+    public void setInsertExtract(int insert, int extract){
+        this.maxInsert = insert;
+        this.maxExtract = extract;
     }
 
     @Override
@@ -85,6 +95,23 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
         return energyToBeRemoved;
     }
 
+    public double getExtractionsToExtract(double amount, int extractionsOtherwise){
+        int testMaxExtract = (int) Math.min(this.maxExtract, amount);
+
+        int energyToBeRemoved = Math.min(testMaxExtract, this.energy);
+
+        double test = ((double) amount) / ((double) energyToBeRemoved);
+
+        return extractionsOtherwise > test ? 1 : test;
+
+
+
+    }
+
+    public void setCapacity(int newCapacity){
+        this.capacity = newCapacity;
+    }
+
     @Override
     public int getEnergyStored() {
         this.cullEnergy();
@@ -100,6 +127,10 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
     public boolean canExtract() {
         cullEnergy();
         return this.canExtract && (this.energy < this.capacity);
+    }
+
+    public boolean isFull(){
+        return this.energy == this.capacity;
     }
 
     @Override
@@ -129,8 +160,7 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
         tag.putInt("insert", this.maxInsert);
         tag.putBoolean("supports_extract", this.canExtract);
 
-        if(this.canExtract)
-            tag.putInt("extract", this.maxExtract);
+        tag.putInt("extract", this.maxExtract);
 
         return tag;
     }
@@ -142,10 +172,7 @@ public class MachineInternalEnergyBuffer implements IEnergyStorage {
 
         this.canExtract = tag.getBoolean("supports_extract");
 
-        if(this.canExtract){
-            this.maxExtract = tag.getInt("extract");
-        }else{
-            this.maxExtract = Config.DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT.get();
-        }
+        this.maxExtract = tag.getInt("extract");
+
     }
 }

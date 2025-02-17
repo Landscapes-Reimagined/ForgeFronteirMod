@@ -1,17 +1,21 @@
 package com.landscapesreimagined.forgefrontier.recipies;
 
 import com.google.gson.JsonObject;
+import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
 import com.landscapesreimagined.forgefrontier.mixinInterfaces.EnergeticMixingProcessingRecipeParams;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
+import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.item.SmartInventory;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class EnergeticMixingRecipe extends MixingRecipe {
+public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
 
 
 
@@ -24,6 +28,23 @@ public class EnergeticMixingRecipe extends MixingRecipe {
         super(params);
         this.requiredEnergy = ((EnergeticMixingProcessingRecipeParams) params).getEnergy();
         this.requiredEnergyLevel = ((EnergeticMixingProcessingRecipeParams) params).getRequiredEnergyLevel();
+    }
+
+    @Override
+    public boolean matchesWorld(BasinBlockEntity basin) {
+
+        Level world = basin.getLevel();
+        BlockPos basinPos = basin.getBlockPos();
+
+        if(world == null)
+            return false;//until maybe needed?
+
+        BlockEntity entityUnderBasin = world.getBlockEntity(basinPos.below());
+
+        if(!(entityUnderBasin instanceof EnergeticBlazeBurnerBlockEntity ebb))
+            return false;
+
+        return this.requiredEnergyLevel.testEnergeticBlazeBurner(ebb.getEnergyLevelFromBlock());
     }
 
     @Override
@@ -68,6 +89,6 @@ public class EnergeticMixingRecipe extends MixingRecipe {
 
     @Override
     public boolean matches(SmartInventory inv, @NotNull Level worldIn) {
-        return super.matches(inv, worldIn);
+        return false;
     }
 }

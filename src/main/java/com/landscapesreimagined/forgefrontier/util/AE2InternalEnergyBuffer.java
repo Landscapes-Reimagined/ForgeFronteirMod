@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class AE2InternalEnergyBuffer implements IAEPowerStorage {
 
-    public static double MAX_INSERT_AMOUNT = 0.0001;
+    public static double MIN_INSERT_AMOUNT = 0.0001;
 
     protected double AEPower = 0;
 
@@ -20,6 +20,7 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
 
     public AE2InternalEnergyBuffer(double capacity, double maxInsert, double power){
         this.AEPower = power;
+        this.maxInsert = maxInsert;
         this.energyCapacity = capacity;
     }
 
@@ -31,11 +32,15 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
     @Override
     public double injectAEPower(double amt, Actionable mode) {
 
-        if(amt <= MAX_INSERT_AMOUNT){
+        if(amt <= MIN_INSERT_AMOUNT){
             return 0;
         }
 
-        double testMaxReceive = Math.min(Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), amt);
+        double roundedAmt = MathUtil.roundDefaultPrecision(amt);
+
+        double testMaxReceive = Math.min(this.maxInsert, roundedAmt);
+
+        double remainder = roundedAmt - testMaxReceive;
 
         double energyToInsert = Math.min(testMaxReceive, this.energyCapacity - this.AEPower);
 
@@ -45,7 +50,13 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
         }
 
 
-        return energyToInsert;
+        return (roundedAmt - energyToInsert) + (remainder);
+    }
+
+
+
+    public double getMaxInsert(){
+        return this.maxInsert;
     }
 
     @Override
@@ -72,17 +83,47 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
     public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
 
 
+
+//        if(amt <= MIN_INSERT_AMOUNT){
+//            return 0;
+//        }
+//
+//        double testMaxReceive = Math.min(Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), usePowerMultiplier.multiply(amt));
+//
+//        double energyToInsert = Math.min(testMaxReceive, this.energyCapacity - this.AEPower);
+//
+//        if(mode == Actionable.MODULATE){
+//            this.AEPower += energyToInsert;
+//
+//        }
+//
+//
+//        return usePowerMultiplier.divide(energyToInsert);
         return 0;
+    }
+
+    public double usePower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier){
+        if(amt < MIN_INSERT_AMOUNT){
+            return 0;
+        }
+
+        double extractedAmount = MathUtil.roundDefaultPrecision(Math.min(usePowerMultiplier.multiply(amt), this.AEPower));
+
+        if(mode == Actionable.MODULATE){
+            this.AEPower -= extractedAmount;
+        }
+
+        return usePowerMultiplier.divide(extractedAmount);
     }
 
     public CompoundTag writeToTag(){
         CompoundTag tag = new CompoundTag();
 
-        tag.putDouble("power", this.AEPower);
+        tag.putDouble("power", MathUtil.roundDefaultPrecision(this.AEPower));
 
-        tag.putDouble("capacity", this.energyCapacity);
+        tag.putDouble("capacity", MathUtil.roundDefaultPrecision(this.energyCapacity));
 
-        tag.putDouble("maxInsert", this.maxInsert);
+        tag.putDouble("maxInsert", MathUtil.roundDefaultPrecision(this.maxInsert));
 
 
         return tag;
@@ -90,9 +131,13 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
     }
 
     public void readTag(CompoundTag tag){
-        this.AEPower = tag.contains("requiredEnergy") ? tag.getInt("requiredEnergy") : tag.getInt("energy");
-        this.energyCapacity = tag.getInt("capacity");
-        this.maxInsert = tag.getDouble("maxInsert");
+        this.AEPower = MathUtil.roundDefaultPrecision(tag.getInt("power"));
+        this.energyCapacity = MathUtil.roundDefaultPrecision(tag.getInt("capacity"));
+        this.maxInsert = MathUtil.roundDefaultPrecision(tag.getDouble("maxInsert"));
 
+    }
+
+    public boolean isFull() {
+        return this.AEPower >= this.getAEMaxPower();
     }
 }

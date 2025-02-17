@@ -1,5 +1,8 @@
 package com.landscapesreimagined.forgefrontier.ModBlocks;
 
+import appeng.api.orientation.IOrientableBlock;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
 import com.landscapesreimagined.forgefrontier.ModItems.ModBlockItems.EnergeticBlazeBurnerBlockItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
@@ -18,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergeticBlazeBurner extends BlazeBurnerBlock {
+public class EnergeticBlazeBurner extends BlazeBurnerBlock implements IOrientableBlock {
 
     public static final EnumProperty<EnergyLevel> ENERGY_LEVEL = EnumProperty.create("energy_level", EnergyLevel.class);
 
@@ -73,6 +76,11 @@ public class EnergeticBlazeBurner extends BlazeBurnerBlock {
                 : EnergyLevel.NONE;
     }
 
+    @Override
+    public IOrientationStrategy getOrientationStrategy() {
+        return OrientationStrategies.horizontalFacing();
+    }
+
 
     /**
      * This enum represents the state of the blaze. <br>Each entry is a direct paralell to one of {@link HeatLevel}'s entries.<br>
@@ -97,6 +105,10 @@ public class EnergeticBlazeBurner extends BlazeBurnerBlock {
         private final int minFE;
         EnergyLevel(int FE, HeatLevel level){
             this.minFE = FE;
+        }
+
+        public boolean isAtLeast(EnergyLevel energyLevel) {
+            return this.ordinal() >= energyLevel.ordinal();
         }
 
         @Override

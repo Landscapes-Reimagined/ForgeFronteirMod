@@ -29,17 +29,16 @@
 
 package com.landscapesreimagined.forgefrontier.client.renderer.blockentities;
 
+import com.ibm.icu.text.MessagePattern;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
-import com.landscapesreimagined.forgefrontier.ModItems.ModBlockItems.EnergeticBlazeBurnerBlockItem;
 import com.landscapesreimagined.forgefrontier.client.renderer.ForgeFrontierSpriteShifts;
 import com.landscapesreimagined.forgefrontier.client.renderer.models.ForgeFronteirPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
@@ -57,7 +56,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -165,7 +163,17 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             draw(flameBuffer, horizontalAngle, ms, cutout);
         }
 
-        PartialModel blazeModel = getPartialModel(heatLevel, blockAbove);
+        PartialModel blazeModel = getPartialModel(heatLevel, energyLevel, blockAbove);
+
+        if(partialBlazeModelNeedsUnderLayer(blazeModel)){
+            PartialModel underInfuseModel = blockAbove ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_ON : ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ON;
+            SuperByteBuffer blazeBuffer = CachedBufferer.partial(underInfuseModel, blockState);
+            if (modelTransform != null)
+                blazeBuffer.transform(modelTransform);
+            blazeBuffer.translate(0, headY, 0);
+            draw(blazeBuffer, horizontalAngle, ms, solid);
+
+        }
 
         SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
         if (modelTransform != null)
@@ -173,8 +181,10 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
         blazeBuffer.translate(0, headY, 0);
         draw(blazeBuffer, horizontalAngle, ms, solid);
 
+
+
         if (drawGoggles) {
-            PartialModel gogglesModel = blazeModel == ForgeFronteirPartialModels.BLAZE_INERT
+            PartialModel gogglesModel = isSmallBlaze(blazeModel)
                     ? ForgeFronteirPartialModels.BLAZE_GOGGLES_SMALL : ForgeFronteirPartialModels.BLAZE_GOGGLES;
 
             SuperByteBuffer gogglesBuffer = CachedBufferer.partial(gogglesModel, blockState);
@@ -189,7 +199,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             if (modelTransform != null)
                 hatBuffer.transform(modelTransform);
             hatBuffer.translate(0, headY, 0);
-            if (blazeModel == ForgeFronteirPartialModels.BLAZE_INERT) {
+            if (isSmallBlaze(blazeModel)) {
                 hatBuffer.translateY(0.5f)
                         .centre()
                         .scale(0.75f)
@@ -228,17 +238,52 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
         ms.popPose();
     }
 
-    private static PartialModel getPartialModel(BlazeBurnerBlock.HeatLevel heatLevel, boolean blockAbove) {
+    private static boolean isSmallBlaze(PartialModel blazeModel) {
+        return blazeModel == ForgeFronteirPartialModels.BLAZE_INERT || blazeModel == ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
+    }
+
+    private static PartialModel getPartialModel(BlazeBurnerBlock.HeatLevel heatLevel, EnergeticBlazeBurner.EnergyLevel energyLevel, boolean blockAbove) {
         PartialModel blazeModel;
-        if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING)) {
-            blazeModel = blockAbove ? ForgeFronteirPartialModels.BLAZE_SUPER_ACTIVE : ForgeFronteirPartialModels.BLAZE_SUPER;
-        } else if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)) {
-            blazeModel = blockAbove && heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.KINDLED) ? ForgeFronteirPartialModels.BLAZE_ACTIVE
-                    : ForgeFronteirPartialModels.BLAZE_IDLE;
+        if (energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.INFUSE)) {
+
+            blazeModel = blockAbove
+                ? switch (heatLevel){
+                    case NONE -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
+                    case SMOULDERING -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_OFF;
+                    case FADING, KINDLED -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_HEATED;
+                    case SEETHING -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_SUPERHEATED;
+                }
+                : switch (heatLevel){
+                    case NONE -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
+                    case SMOULDERING -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_OFF;
+                    case FADING, KINDLED -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_HEATED;
+                    case SEETHING -> ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_SUPERHEATED;
+                };
+
+
+        } else if (energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.SLEEPY)) {
+            blazeModel = blockAbove && energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE) ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_CRYSTALLIZE
+                    : (energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE) ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_CRYSTALLIZE_EYES_OPEN : ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPY);
         } else {
-            blazeModel = ForgeFronteirPartialModels.BLAZE_INERT;
+            blazeModel = ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
         }
         return blazeModel;
+    }
+
+    private static final PartialModel[] UNDER_LAYER_REQUIRED = {
+            ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_HEATED,
+            ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_SUPERHEATED,
+            ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_HEATED,
+            ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_SUPERHEATED
+    };
+
+    private static boolean partialBlazeModelNeedsUnderLayer(PartialModel model){
+        for(var p : UNDER_LAYER_REQUIRED){
+            if(p == model){
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
