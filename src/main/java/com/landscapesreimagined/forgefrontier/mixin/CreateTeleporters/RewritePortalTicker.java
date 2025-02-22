@@ -43,6 +43,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+import static com.landscapesreimagined.forgefrontier.util.BlockSearchDir.BlockSearchDirFlags.X;
+import static com.landscapesreimagined.forgefrontier.util.BlockSearchDir.BlockSearchDirFlags.Z;
+
+
 @Mixin(CustomPortalOnBlock.class)
 public class RewritePortalTicker {
 
@@ -103,7 +107,7 @@ public class RewritePortalTicker {
 
         for(Entity entity : entities) {
 
-            int searchFlags = (facing.getAxis() == Direction.Axis.Z ? BlockSearchDir.BlockSearchDirFlags.X.flag : BlockSearchDir.BlockSearchDirFlags.Z.flag) |
+            int searchFlags = (facing.getAxis() == Direction.Axis.Z ? X.flag : Z.flag) |
                     BlockSearchDir.BlockSearchDirFlags.Y.flag |
                     BlockSearchDir.BlockSearchDirFlags.Y_ALONG_AXIS.flag |
                     BlockSearchDir.BlockSearchDirFlags.INVERT_Y.flag;
