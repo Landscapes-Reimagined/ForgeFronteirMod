@@ -56,12 +56,12 @@ public class ForgeFrontier {
             TAB_DEFERRED_REGISTER.register("forge_frontier_tab",
                     () -> CreativeModeTab.builder()
                             .title(Component.translatable("itemGroup.forgefrontier.forge_frontier_tab"))
-                            .icon(() -> ModItems.GLOBE_ANIM_TEST.get().getDefaultInstance())
+                            .icon(() -> ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.asItem().getDefaultInstance())
                             .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.EMPTY_BLAZE_BURNER);
-                                output.accept(ModItems.GLOBE_ANIM_TEST.get());
+//                                output.accept(ModItems.GLOBE_ANIM_TEST.get());
                                 output.accept(ModItems.ANIM_TEST.get());
-                                output.accept(ModItems.NOVA_ANIM_TEST.get());
+//                                output.accept(ModItems.NOVA_ANIM_TEST.get());
                                 output.accept(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.asItem());
                             })
                             .build());

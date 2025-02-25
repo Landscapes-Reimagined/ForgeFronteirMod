@@ -44,6 +44,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.random.WeightedEntry.Wrapper;
@@ -90,7 +91,12 @@ public class EnergeticBlazeBurnerBlockItem extends BlockItem {
         this.capturedBlaze = capturedBlaze;
     }
 
-//    @Override
+    @Override
+    public Component getName(ItemStack pStack) {
+        return this.capturedBlaze ? Component.translatable("block.forgefrontier.energetic_blaze_burner") : Component.translatable("block.forgefrontier.empty_energetic_blaze_burner");
+    }
+
+    //    @Override
 //    public String getDescriptionId() {
 //        return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + RegisteredObjects.getKeyOrThrow(this).getPath();
 //    }

@@ -1,0 +1,26 @@
+{
+  "type": "forgefrontier:energetic_mixing",
+  "heatRequirement": "superheated",
+  "requiredEnergy": 500000,
+  "requiredEnergyLevel": "infuse",
+  "ingredients": [
+    {
+      "item": "ae2:charged_certus_quartz_crystal",
+      "count": 16
+    },
+    {
+      "item": "ae2:certus_quartz_dust",
+      "count": 64
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 500
+    }
+  ],
+  "results": [
+    {
+      "item": "ae2:certus_quartz_crystal",
+      "count": 64
+    }
+  ]
+}

@@ -19,16 +19,22 @@ public class ModItems {
     public static final DeferredRegister<Item> MOD_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ForgeFrontier.MODID);
 
     public static final RegistryObject<Item> ANIM_TEST = MOD_ITEMS.register("animation_test", () -> new Item(new Item.Properties()));
-
-    public static final RegistryObject<Item> NOVA_ANIM_TEST = MOD_ITEMS.register("nova_animation_test", () -> new Item(new Item.Properties()));
-    public static final RegistryObject<Item> GLOBE_ANIM_TEST = MOD_ITEMS.register("globe_animation_test", () -> new Item(new Item.Properties()));
+//monkey made me remove these :(
+//    public static final RegistryObject<Item> NOVA_ANIM_TEST = MOD_ITEMS.register("nova_animation_test", () -> new Item(new Item.Properties()));
+//    public static final RegistryObject<Item> GLOBE_ANIM_TEST = MOD_ITEMS.register("globe_animation_test", () -> new Item(new Item.Properties()));
 
     public static final ItemEntry<EnergeticBlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
             FORGE_FRONTIER_REGISTRATE.item("empty_energetic_blaze_burner", EnergeticBlazeBurnerBlockItem::empty)
-                    .model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
+//                    .model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
 //                    .model((c, p) ->{
 //                        p.getExistingFile(new ResourceLocation("create:item/blaze_burner");
 //                    })
+                    .model((c, p) -> {
+                        String path = "block";
+                        for (String string : new String[]{"blaze_burner", "block"})
+                            path += "/" + ("_".equals(string) ? c.getName() : string);
+                        p.withExistingParent(c.getName(), p.modLoc(path));
+                    })
                     .register();
 
     public static void register() {};

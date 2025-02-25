@@ -5,7 +5,8 @@
 	"model": "forgefrontier:models/block/blaze_burner/item.obj",
 	"textures": {
 		"0": "forgefrontier:block/blaze_heater_brazier",
-		"1": "forgefrontier:block/blaze_idle",
+		"1": "forgefrontier:block/energetic_blaze_crystallize_eyes_open",
+		"2": "forgefrontier:block/blaze_active",
 		"particle": "create:block/dark_metal_block"
 	},
 	"display": {
