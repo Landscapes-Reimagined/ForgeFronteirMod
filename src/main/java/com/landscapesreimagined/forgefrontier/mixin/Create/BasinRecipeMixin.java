@@ -42,7 +42,7 @@ public abstract class BasinRecipeMixin extends ProcessingRecipe<SmartInventory> 
 
     }
 
-    @Redirect(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/IItemHandler;extractItem(IIZ)Lnet/minecraft/world/item/ItemStack;", remap = true), remap = false)
+    @Redirect(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/IItemHandler;extractItem(IIZ)Lnet/minecraft/world/item/ItemStack;"), remap = false)
     private static ItemStack extractRightAmount(IItemHandler availableItems, int slot, int amount, boolean simulate, BasinBlockEntity basin, Recipe<?> recipe) {
         if (recipe instanceof EnergeticMixingRecipe energeticMixingRecipe) {
             var stack = availableItems.getStackInSlot(slot);
