@@ -41,6 +41,10 @@ public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
         this.requiredEnergyLevel = ((EnergeticMixingProcessingRecipeParams) params).getRequiredEnergyLevel();
     }
 
+    public Integer getItemAmount(Item item){
+        return this.itemCountMap.get(item);
+    }
+
     @Override
     public boolean matchesWorld(BasinBlockEntity basin) {
 
@@ -85,6 +89,9 @@ public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
             if(entry.has("item") && entry.has("count"))
                 this.itemCountMap.put(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.get("item").getAsString())), entry.get("count").getAsInt());
         }));
+
+
+
     }
 
     public int getRequiredEnergy() {
