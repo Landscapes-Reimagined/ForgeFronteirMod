@@ -2,9 +2,40 @@ package com.landscapesreimagined.forgefrontier.util;
 
 import com.landscapesreimagined.forgefrontier.mixinInterfaces.IndustrialProcessingTransportedItem;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import uwu.lopyluna.create_dd.access.DDTransportedItemStack;
 
+import java.util.Optional;
+
 public class MixinUtil {
+
+    public static boolean isOnArmorOrCurios(Iterable<?> collection, Object iterable, Entity entity) {
+        for(Object s : collection){
+            if(s == iterable){
+                return true;
+            }
+        }
+
+        if(!(entity instanceof Player p))
+            return false;
+
+        LazyOptional<ICuriosItemHandler> curiosItemHandlerLazyOptional = CuriosApi.getCuriosInventory(p);
+
+        if(!curiosItemHandlerLazyOptional.isPresent())
+            return false;
+
+        Optional<ICuriosItemHandler> curiosItemHandler = curiosItemHandlerLazyOptional.resolve();
+        return curiosItemHandler.map(iCuriosItemHandler -> iCuriosItemHandler.isEquipped((itemStack -> itemStack == iterable))).orElse(false);
+    }
 
     public static TransportedItemStack fromDDItemStack(DDTransportedItemStack fromStack){
         TransportedItemStack resultStack = new TransportedItemStack(fromStack.stack);
@@ -75,4 +106,22 @@ public class MixinUtil {
 
     }
 
+    public static void overwriteJetpackKeyExecute(Entity entity, boolean csaFlying) {
+        if (entity instanceof LivingEntity e) {
+            ItemStack stack = e.getItemBySlot(EquipmentSlot.CHEST);
+
+            LazyOptional<ICuriosItemHandler> curiosItemHandlerLazyOptional = CuriosApi.getCuriosInventory(e);
+
+            if(!curiosItemHandlerLazyOptional.isPresent())
+                return;
+
+            Optional<ICuriosItemHandler> curiosItemHandler = curiosItemHandlerLazyOptional.resolve();
+            boolean inCurios = curiosItemHandler.map(iCuriosItemHandler -> iCuriosItemHandler.isEquipped((itemStack -> itemStack.is(ItemTags.create(new ResourceLocation("create_sa:jetpack")))))).orElse(false);
+
+            if (stack.is(ItemTags.create(new ResourceLocation("create_sa:jetpack"))) || inCurios) {
+                entity.getPersistentData().putBoolean("CsaFlying", csaFlying);
+            }
+
+        }
+    }
 }

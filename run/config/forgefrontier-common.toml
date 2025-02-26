@@ -34,3 +34,10 @@
 	#Range: 1.0 ~ 15.0
 	energetic_blaze_max_fe_receive_inject_infuse_multiplier = 1.5
 
+	#Miscellaneous Settings
+	[machines.misc]
+		#Curio slots to tick
+		#only modify if you know what you're doing!!!
+		#Denote different slots with a comma, like: slot1, slot2, slot3
+		ticking_curio_slots = "head"
+

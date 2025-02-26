@@ -331,6 +331,12 @@ dependencies {
     //Applied Energestics 2
     implementation fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}");
 
+    //Unusual End
+//    implementation fg.deobf("locallibs:unusualend-2.2.3-forge:${minecraft_version}")
+
+
+    //Create: Stuff and Additions
+    implementation fg.deobf("curse.maven:create-stuff-additions-466792:6168370")
 
 
     //Create: New Age (Energy stuff, dw about it)
