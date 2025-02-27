@@ -14,6 +14,8 @@
     "Create.EnergeticMixingRecipeBuilderInejctor",
     "Create.MechanicalMixerMixin",
     "Create.ProcessingCallbackGetter",
+    "Create.ProcessingRecipeMixin",
+    "Create.ProcessingRecipeParamsFieldAccessor",
     "Create.TransportedItemStackMixin",
     "createDDChanges.DDCreateMixin",
     "createDDChanges.DDFanProcessingMixin",

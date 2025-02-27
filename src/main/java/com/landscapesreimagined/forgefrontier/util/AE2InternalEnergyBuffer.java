@@ -12,7 +12,7 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
 
     public static double MIN_INSERT_AMOUNT = 0.0001;
 
-    protected double AEPower = 0;
+    public double AEPower = 0;
 
     protected double energyCapacity;
 

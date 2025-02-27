@@ -299,6 +299,9 @@ dependencies {
     //Nether Remastered
     implementation fg.deobf("locallibs:nether_remastered:${nether_remastered}")
 
+//    //runtime only AdvancedAE
+//    implementation fg.deobf("curse.maven:advancedae-1084104:6117821")
+
 
     //Create: Teleporters
     implementation fg.deobf("curse.maven:create-teleporters-829272:${create_teleporters_file}")
@@ -317,10 +320,10 @@ dependencies {
 
 
     //JEI
-    // compile against the JEI API but do not include it at runtime
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    // compile against the JEI API but do not include it at runtime - NEED FULL JAR
+//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+    implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     //Create: Additions(For Fluid Blazes)
     implementation fg.deobf("curse.maven:createaddition-439890:${create_additions_file}")
@@ -336,11 +339,17 @@ dependencies {
 
 
     //Create: Stuff and Additions
-    implementation fg.deobf("curse.maven:create-stuff-additions-466792:6168370")
+    implementation fg.deobf("curse.maven:create-stuff-additions-466792:${sa_file}")
+
+
+    //Create: New Age
+//    implementation fg.deobf("locallibs:create-new-age-forge:${minecraft_version}-${new_age_version}")
+    //
+
 
 
     //Create: New Age (Energy stuff, dw about it)
-//    implementation fg.deobf("curse.maven:create-new-age-905861:${new_age_version}")
+//    implementation fg.deobf("curse.maven:create-new-age-905861:")
 
 
 

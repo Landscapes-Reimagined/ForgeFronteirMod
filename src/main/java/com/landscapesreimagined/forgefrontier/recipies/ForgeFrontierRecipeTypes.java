@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
-public enum ForgeFronteirRecipieTypes implements IRecipeTypeInfo {
+public enum ForgeFrontierRecipeTypes implements IRecipeTypeInfo {
     ENERGETIC_MIXING(EnergeticMixingRecipe::new, new ResourceLocation(ForgeFrontier.MODID, "energetic_mixing"));
 
     public final ResourceLocation id;
@@ -25,14 +25,14 @@ public enum ForgeFronteirRecipieTypes implements IRecipeTypeInfo {
     private final RegistryObject<RecipeType<?>> typeObject;
     private final Supplier<RecipeType<?>> type;
 
-    ForgeFronteirRecipieTypes(Supplier<RecipeSerializer<?>> serializerSupplier, ResourceLocation id) {
+    ForgeFrontierRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, ResourceLocation id) {
         this.id = id;
         serializerObject = Registers.SERIALIZER.register(id.getPath(), serializerSupplier);
         typeObject = Registers.TYPE.register(id.getPath(), () -> RecipeType.simple(id));
         type = typeObject;
     }
 
-    ForgeFronteirRecipieTypes(ProcessingRecipeBuilder.ProcessingRecipeFactory<?> processingFactory, ResourceLocation id) {
+    ForgeFrontierRecipeTypes(ProcessingRecipeBuilder.ProcessingRecipeFactory<?> processingFactory, ResourceLocation id) {
         this(() -> new ProcessingRecipeSerializer<>(processingFactory), id);
     }
 

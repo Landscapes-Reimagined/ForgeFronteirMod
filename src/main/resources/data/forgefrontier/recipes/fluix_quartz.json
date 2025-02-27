@@ -1,15 +1,19 @@
 {
   "type": "forgefrontier:energetic_mixing",
-  "heatRequirement": "superheated",
-  "requiredEnergy": 500000,
-  "requiredEnergyLevel": "infuse",
+  "heatRequirement": "heated",
+  "requiredEnergy": 50000,
+  "requiredEnergyLevel": "crystallize",
   "ingredients": [
     {
       "item": "ae2:charged_certus_quartz_crystal",
       "count": 16
     },
     {
-      "item": "ae2:certus_quartz_dust",
+      "item": "minecraft:redstone",
+      "count": 16
+    },
+    {
+      "item": "minecraft:quartz",
       "count": 16
     },
     {
@@ -19,7 +23,7 @@
   ],
   "results": [
     {
-      "item": "ae2:certus_quartz_crystal",
+      "item": "ae2:fluix_crystal",
       "count": 64
     }
   ]

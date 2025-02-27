@@ -15,6 +15,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity{
 

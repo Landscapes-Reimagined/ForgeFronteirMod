@@ -1,0 +1,59 @@
+package com.landscapesreimagined.forgefrontier.client.renderer.GUI;
+
+import com.landscapesreimagined.forgefrontier.ForgeFrontier;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.ScreenElement;
+import com.simibubi.create.foundation.utility.Color;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+public enum ForgeFrontierTextures implements ScreenElement {
+
+    JEI_NO_ENERGY("widgets", 16, 181, 169, 19),
+    JEI_ENERGY("widgets", 0, 136,169, 19 );
+
+    public static final int FONT_COLOR = 0x575F7A;
+
+    public final ResourceLocation location;
+    public int width, height;
+    public int startX, startY;
+
+    private ForgeFrontierTextures(String location, int width, int height) {
+        this(location, 0, 0, width, height);
+    }
+
+    private ForgeFrontierTextures(int startX, int startY) {
+        this("icons", startX * 16, startY * 16, 16, 16);
+    }
+
+    private ForgeFrontierTextures(String location, int startX, int startY, int width, int height) {
+        this(ForgeFrontier.MODID, location, startX, startY, width, height);
+    }
+
+    private ForgeFrontierTextures(String namespace, String location, int startX, int startY, int width, int height) {
+        this.location = new ResourceLocation(namespace, "textures/gui/" + location + ".png");
+        this.width = width;
+        this.height = height;
+        this.startX = startX;
+        this.startY = startY;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void bind() {
+        RenderSystem.setShaderTexture(0, location);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void render(GuiGraphics graphics, int x, int y) {
+        graphics.blit(location, x, y, startX, startY, width, height);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void render(GuiGraphics graphics, int x, int y, Color c) {
+        bind();
+        UIRenderHelper.drawColoredTexture(graphics, c, x, y, startX, startY, width, height);
+    }
+}

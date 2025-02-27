@@ -1,5 +1,7 @@
 {
   "block.forgefrontier.energetic_blaze_burner": "Energetic Blaze Burner",
   "block.forgefrontier.empty_energetic_blaze_burner": "Empty Energetic Blaze Burner",
-  "itemGroup.forgefrontier.forge_frontier_tab": "Forge Frontier"
+  "itemGroup.forgefrontier.forge_frontier_tab": "Forge Frontier",
+  "forgefrontier.recipe.energy_level_requirement.crystallize": "Crystallize",
+  "forgefrontier.recipe.energy_level_requirement.infuse": "Energetic Infusion"
 }

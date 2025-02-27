@@ -121,7 +121,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
         boolean blockAbove = animation > 0.125f;
         float time = AnimationTickHolder.getRenderTime(level);
         float renderTick = time + (hashCode % 13) * 16f;
-        float offsetMult = heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) ? 64 : 16;
+        float offsetMult = (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) || energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.SLEEPY)) ? 64 : 16;
         float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;
         float offset1 = Mth.sin((float) ((renderTick / 16f + Math.PI) % (2 * Math.PI))) / offsetMult;
         float offset2 = Mth.sin((float) ((renderTick / 16f + Math.PI / 2) % (2 * Math.PI))) / offsetMult;

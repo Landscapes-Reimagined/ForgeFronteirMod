@@ -533,6 +533,14 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         return this.energyBuffer.extractEnergy(maxExtract, simulate);
     }
 
+    public void setFE(int FE){
+        this.energyBuffer.energy = FE;
+    }
+
+    public void setAE(double AE){
+        this.internalAEBuffer.AEPower = AE;
+    }
+
     @Override
     public int getEnergyStored() {
         return this.energyBuffer.getEnergyStored();

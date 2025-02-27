@@ -45,6 +45,13 @@ public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
         return this.itemCountMap.get(item);
     }
 
+    public HashMap<Item, Integer> getItemCountMap(){
+        var map = this.itemCountMap.clone();
+        if(map instanceof HashMap<?, ?> itemMap)
+            return (HashMap<Item, Integer>) itemMap;
+        return null;
+    }
+
     @Override
     public boolean matchesWorld(BasinBlockEntity basin) {
 
