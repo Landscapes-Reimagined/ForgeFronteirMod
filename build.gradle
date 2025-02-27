@@ -14,7 +14,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.30,6.1)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 
 }
@@ -70,7 +70,7 @@ minecraft {
     // When true, this property will add the folder name of all declared run configurations to generated IDE run configurations.
     // The folder name can be set on a run configuration using the "folderName" property.
     // By default, the folder name of a run configuration is the name of the Gradle project containing it.
-    // generateRunFolders = true
+//     generateRunFolders = true
 
     // This property enables access transformers for use in development.
     // They will be applied to the Minecraft artifact.
@@ -300,7 +300,7 @@ dependencies {
     implementation fg.deobf("locallibs:nether_remastered:${nether_remastered}")
 
 //    //runtime only AdvancedAE
-//    implementation fg.deobf("curse.maven:advancedae-1084104:6117821")
+    implementation fg.deobf("curse.maven:advancedae-1084104:6117821")
 
 
     //Create: Teleporters
@@ -386,6 +386,10 @@ dependencies {
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.named('processResources', ProcessResources).configure {
+
+    exclude '**/*.json'
+
+
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
             forge_version: forge_version, forge_version_range: forge_version_range,
@@ -395,6 +399,7 @@ tasks.named('processResources', ProcessResources).configure {
     ]
 
     inputs.properties replaceProperties
+
 
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]

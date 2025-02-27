@@ -59,10 +59,12 @@ public class EnergeticBlazeBurnerPonder {
         scene.idle(70);
         scene.overlay.showText(80).text("Like the normal blaze burner, to get energetic mixing recipes going we need a mixer and basin setup.").attachKeyFrame().placeNearTarget().pointAt(util.vector.centerOf(burnerLocation.above(2)));
         scene.idle(30);
-        scene.world.showSection(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), Direction.EAST);
+        scene.world.showSection(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), Direction.DOWN);
         scene.idle(10);
         scene.world.setKineticSpeed(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), 64);
         scene.idle(50);
+
+
 
 
 
