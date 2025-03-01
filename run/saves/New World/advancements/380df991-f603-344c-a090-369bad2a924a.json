@@ -1027,9 +1027,40 @@
   },
   "create:wrench_goggles": {
     "criteria": {
-      "0": "2025-02-26 20:38:34 -0800"
+      "0": "2025-02-26 20:38:34 -0800",
+      "1": "2025-02-28 19:28:05 -0800"
     },
-    "done": false
+    "done": true
+  },
+  "create:arm_blaze_burner": {
+    "criteria": {
+      "0": "2025-02-28 19:26:35 -0800"
+    },
+    "done": true
+  },
+  "create:chute": {
+    "criteria": {
+      "0": "2025-02-28 19:27:30 -0800"
+    },
+    "done": true
+  },
+  "create:mechanical_arm": {
+    "criteria": {
+      "0": "2025-02-28 20:10:46 -0800"
+    },
+    "done": true
+  },
+  "create:recipes/misc/crafting/appliances/schedule_clear": {
+    "criteria": {
+      "has_item": "2025-02-28 20:11:26 -0800"
+    },
+    "done": true
+  },
+  "create:conductor": {
+    "criteria": {
+      "0": "2025-02-28 20:12:21 -0800"
+    },
+    "done": true
   },
   "DataVersion": 3465
 }

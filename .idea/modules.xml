@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ForgeFrontier.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ForgeFrontier.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ForgeFrontier.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ForgeFrontier.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.landscapesreimagined.ForgeFrontier.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.landscapesreimagined.ForgeFrontier.test.iml" />
     </modules>
   </component>
 </project>

@@ -78,7 +78,6 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     }
 
 
-    //TODO: recipes and requiredEnergy
     @Override
     public void tick() {
         super.tick();
@@ -410,6 +409,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         BlockPos mixerPos = basinPos.above(2);
 
         //Never call in a null world!
+
         assert world != null;
         if(!(world.getBlockEntity(mixerPos) instanceof MechanicalMixerBlockEntity mixer)) return null;
 
@@ -421,6 +421,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
 
 
         return mixer;
+//        return null;
 
     }
 

@@ -1,5 +1,6 @@
 package com.landscapesreimagined.forgefrontier;
 
+import com.landscapesreimagined.forgefrontier.ModBlocks.ArmInteractionStuff;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
@@ -73,6 +74,8 @@ public class ForgeFrontier {
         ModBlocks.register();
         ModBlockEntities.register();
 
+        ArmInteractionStuff.register();
+
         ForgeFrontierRecipeTypes.register(modEventBus);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeFrontierClient.onCtorClient(modEventBus));
@@ -86,6 +89,6 @@ public class ForgeFrontier {
 
 
     public static ResourceLocation asResource(String name) {
-        return new ResourceLocation(MODID, name);
+        return ResourceLocation.tryBuild(MODID, name);
     }
 }

@@ -2,16 +2,33 @@ package com.landscapesreimagined.forgefrontier.ponder;
 
 import appeng.block.networking.ControllerBlock;
 import appeng.block.networking.EnergyCellBlock;
+import appeng.core.definitions.AEItems;
+import com.google.common.collect.ImmutableList;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
-import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
+import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
+import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
+import com.simibubi.create.content.processing.basin.BasinBlockEntity;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
+import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pointing;
+import de.maxhenkel.pipez.blocks.PipeBlock;
 import de.maxhenkel.pipez.blocks.tileentity.EnergyPipeTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Arrays;
 
@@ -32,6 +49,9 @@ public class EnergeticBlazeBurnerPonder {
         BlockPos pipeOutputPos = new BlockPos(5, 1, 3);
         scene.world.showSection(util.select.fromTo(4, 1, 3, 5, 1, 4), Direction.DOWN);
         scene.world.modifyBlockEntityNBT(util.select.position(pipeOutputPos), EnergyPipeTileEntity.class, EnergeticBlazeBurnerPonder::setConnectedDirections, true);
+        scene.world.modifyBlock(pipeOutputPos, (pipeState) -> pipeState.setValue(PipeBlock.SOUTH, true), false);
+        scene.world.modifyBlockEntity(pipeOutputPos, EnergyPipeTileEntity.class, (pipe) -> pipe.load(setConnectedDirections(pipe.serializeNBT())));
+
 //        scene.world.modifyBlockEntityNBT(util.select.position(pi), EnergyPipeTileEntity.class, EnergeticBlazeBurnerPonder::setConnectedDirections, true);
         scene.idle(30);
         scene.overlay.showText(80).text("Once it has energy, here from a creative generator, it will start to wake up.").attachKeyFrame().placeNearTarget().pointAt(util.vector.topOf(burnerLocation));
@@ -55,22 +75,185 @@ public class EnergeticBlazeBurnerPonder {
         scene.idle(10);
         scene.world.modifyBlockEntity(burnerLocation, EnergeticBlazeBurnerBlockEntity.class, (b) -> EnergeticBlazeBurnerPonder.setEnergyLevel(b, EnergeticBlazeBurner.EnergyLevel.INFUSE));
         scene.world.modifyBlock(burnerLocation, (blockState -> blockState.setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.INFUSE)), false);
-        scene.overlay.showText(60).text("Now that's an energetic blaze burner who's ready to do some processing!").attachKeyFrame().placeNearTarget().pointAt(util.vector.topOf(burnerLocation));
-        scene.idle(70);
-        scene.overlay.showText(80).text("Like the normal blaze burner, to get energetic mixing recipes going we need a mixer and basin setup.").attachKeyFrame().placeNearTarget().pointAt(util.vector.centerOf(burnerLocation.above(2)));
-        scene.idle(30);
-        scene.world.showSection(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), Direction.DOWN);
+        scene.idle(20);
+        scene.overlay.showText(80).text("Like the normal blaze burner, to get energetic mixing recipes going we need a mixer and basin setup. Proceed to the next scene to see how it works.").attachKeyFrame().placeNearTarget().pointAt(util.vector.centerOf(burnerLocation.above(2)));
         scene.idle(10);
+        Selection Kinetics = util.select.fromTo(3,4,3, 4, 4, 3);
+        BlockPos basin = burnerLocation.above();
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.onWrenched(Direction.NORTH));
+
+        scene.world.showSection(Kinetics, Direction.NORTH);
+        scene.world.showSection(util.select.position(basin), Direction.SOUTH);
+        scene.idle(1);
         scene.world.setKineticSpeed(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), 64);
-        scene.idle(50);
-
-
-
-
+        scene.idle(90);
 
 //        scene.world.showSection(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), Direction.DOWN);
 
     }
+
+    public static void mixerScene(SceneBuilder scene, SceneBuildingUtil util){
+        scene.title("energetic_mixing", "Energetic Mixing");
+
+        scene.configureBasePlate(0, 0, 7);
+        scene.showBasePlate();
+        scene.idle(5);
+        BlockPos energyCellPos = new BlockPos(1, 2, 4);
+        BlockPos controllerPos = new BlockPos(1, 1, 4);
+
+
+
+        BlockPos burnerLocation = new BlockPos(3, 1, 3);
+
+        BlockPos basin = burnerLocation.above();
+        Vec3 topOfBasin = util.vector.topOf(basin);
+        Selection Kinetics = util.select.fromTo(3,4,3, 4, 4, 3);
+        BlockPos mixerLocation = basin.above(2);
+
+        BlockPos pipeOutputPos = new BlockPos(5, 1, 3);
+        Selection energySel = util.select.fromTo(4, 1, 3, 5, 1, 4);
+        scene.world.showSection(util.select.position(burnerLocation), Direction.DOWN);
+        scene.idle(2);
+        scene.world.showSection(energySel, Direction.WEST);
+        scene.world.modifyBlockEntityNBT(util.select.position(pipeOutputPos), EnergyPipeTileEntity.class, EnergeticBlazeBurnerPonder::setConnectedDirections, true);
+        scene.world.modifyBlock(pipeOutputPos, (pipeState) -> pipeState.setValue(PipeBlock.SOUTH, true), false);
+        scene.world.modifyBlockEntity(pipeOutputPos, EnergyPipeTileEntity.class, (pipe) -> pipe.setExtracting(Direction.SOUTH, true));
+        scene.world.modifyBlockEntity(burnerLocation, EnergeticBlazeBurnerBlockEntity.class, (b) -> EnergeticBlazeBurnerPonder.setEnergyLevel(b, EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE));
+        scene.world.modifyBlock(burnerLocation, (blockState -> blockState.setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE)), false);
+
+        scene.idle(5);
+
+        scene.world.showSection(Kinetics, Direction.NORTH);
+        scene.world.showSection(util.select.position(basin), Direction.SOUTH);
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.onWrenched(Direction.NORTH));
+
+        scene.idle(1);
+        scene.world.setKineticSpeed(util.select.layersFrom(2).substract(util.select.position(energyCellPos)), 64);
+        scene.idle(5);
+        scene.overlay.showText(40).text("The Energetic Blaze Burner is a replacement for AdvancedAE's Reaction Chamber").attachKeyFrame().placeNearTarget().pointAt(util.vector.topOf(burnerLocation));
+        scene.idle(50);
+        scene.overlay.showText(60).text("Most recipes require the Energetic Blaze Burner to be heated. This works just like a normal Blaze Burner").attachKeyFrame().placeNearTarget().pointAt(util.vector.topOf(burnerLocation));
+        scene.idle(70);
+        scene.world.hideSection(Kinetics, Direction.SOUTH);
+        scene.world.hideSection(util.select.position(basin), Direction.NORTH);
+//        scene.world.setBlock();
+        scene.idle(20);
+        scene.overlay.showControls(new InputWindowElement(util.vector.topOf(burnerLocation), Pointing.DOWN).rightClick()
+                .withItem(new ItemStack(Items.OAK_PLANKS)), 15);
+        scene.idle(7);
+        scene.world.modifyBlock(burnerLocation, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.KINDLED), false);
+        scene.idle(20);
+
+        scene.overlay.showText(70)
+                .attachKeyFrame()
+                .text("The Energetic Blaze has to be fed with flammable items")
+                .pointAt(util.vector.blockSurface(burnerLocation, Direction.WEST))
+                .placeNearTarget();
+        scene.idle(80);
+
+        scene.idle(20);
+        scene.overlay.showControls(new InputWindowElement(util.vector.topOf(burnerLocation), Pointing.DOWN).rightClick()
+                .withItem(AllItems.BLAZE_CAKE.asStack()), 30);
+        scene.idle(7);
+        scene.world.modifyBlock(burnerLocation, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.SEETHING), false);
+        scene.idle(20);
+
+        scene.overlay.showText(80)
+                .attachKeyFrame()
+                .colored(PonderPalette.MEDIUM)
+                .text("With a Blaze Cake or Biodiesel, the Burner can reach an even stronger level of heat")
+                .pointAt(util.vector.blockSurface(burnerLocation, Direction.WEST))
+                .placeNearTarget();
+        scene.idle(90);
+
+//        Class<DeployerBlockEntity> beType = DeployerBlockEntity.class;
+//        scene.world.modifyBlockEntityNBT(util.select.position(4, 1, 2), beType,
+//                nbt -> nbt.put("HeldItem", AllItems.BLAZE_CAKE.asStack()
+//                        .serializeNBT()));
+//
+//        scene.world.showSection(util.select.fromTo(3, 0, 5, 2, 0, 5), Direction.UP);
+//        scene.idle(5);
+//        scene.world.showSection(util.select.fromTo(4, 1, 2, 4, 1, 5), Direction.DOWN);
+//        scene.idle(5);
+//        scene.world.showSection(util.select.fromTo(2, 1, 4, 2, 1, 5), Direction.DOWN);
+//        scene.idle(10);
+
+        scene.overlay.showText(100)
+                .attachKeyFrame()
+                .text("The feeding process can be automated using Deployers or Mechanical Arms, and modpack version 2.3.0 will allow for fluid input")
+                .pointAt(util.vector.blockSurface(burnerLocation, Direction.UP));
+        scene.idle(110);
+
+        scene.world.showSection(Kinetics, Direction.NORTH);
+        scene.world.showSection(util.select.position(basin), Direction.SOUTH);
+        scene.idle(1);
+        scene.world.setKineticSpeed(Kinetics, 64);
+        scene.idle(5);
+        scene.overlay.showText(60).text("This processing is just like any other mechanical mixer processing").pointAt(topOfBasin).placeNearTarget().attachKeyFrame();
+        scene.idle(70);
+
+        ItemStack certusQuartz = AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED.stack();
+        ItemStack quartz = Items.QUARTZ.getDefaultInstance();
+        ItemStack redstone = Items.REDSTONE.getDefaultInstance();
+        redstone.setCount(16);
+        quartz.setCount(16);
+        certusQuartz.setCount(16);
+
+        ItemStack fluixQuartz = AEItems.FLUIX_CRYSTAL.stack(16);
+
+        ItemStack water = Items.WATER_BUCKET.getDefaultInstance();
+        ItemStack fe = ModItems.FORGE_ENERGY.asStack();
+
+
+
+        scene.overlay.showControls(new InputWindowElement(topOfBasin, Pointing.LEFT).withItem(certusQuartz), 30);
+        scene.overlay.showControls(new InputWindowElement(topOfBasin, Pointing.RIGHT).withItem(quartz), 30);
+        scene.overlay.showControls(new InputWindowElement(topOfBasin.add(0, 0.5, 0), Pointing.DOWN).withItem(redstone), 30);
+        scene.idle(40);
+        scene.overlay.showText(60).text("However, they use FE as well").attachKeyFrame().placeNearTarget().pointAt(Vec3.atBottomCenterOf(basin));
+        scene.idle(70);
+        scene.overlay.showControls(new InputWindowElement(topOfBasin, Pointing.LEFT).withItem(water), 30);
+        scene.overlay.showControls(new InputWindowElement(topOfBasin, Pointing.RIGHT).withItem(fe), 30);
+        scene.idle(30);
+
+        Class<MechanicalMixerBlockEntity> type = MechanicalMixerBlockEntity.class;
+        scene.world.modifyBlockEntity(mixerLocation, type, pte -> pte.startProcessingBasin());
+        scene.world.createItemOnBeltLike(basin, Direction.UP, certusQuartz);
+        scene.world.createItemOnBeltLike(basin, Direction.UP, quartz);
+        scene.world.createItemOnBeltLike(basin, Direction.UP, redstone);
+        scene.idle(40);
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.onWrenched(Direction.NORTH));
+        scene.world.showSection(util.select.fromTo(burnerLocation.north(), new BlockPos(7, 1, 0)), Direction.SOUTH);
+        scene.world.setKineticSpeed(util.select.fromTo(burnerLocation.north(), new BlockPos(7, 1, 0)), -48);
+        scene.idle(40);
+
+        scene.world.modifyBlockEntityNBT(util.select.position(basin), BasinBlockEntity.class, nbt -> {
+            nbt.put("VisualizedItems",
+                    NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, fluixQuartz)), ia -> ia.getValue()
+                            .serializeNBT()));
+        });
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.inputInventory.clearContent());
+
+        scene.idle(4);
+        scene.world.createItemOnBelt(util.grid.at(3, 1, 2), Direction.UP, fluixQuartz);
+        scene.idle(35);
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.onWrenched(Direction.NORTH));
+        scene.world.hideSection(util.select.fromTo(burnerLocation.north(), new BlockPos(7, 1, 0)), Direction.NORTH);
+        scene.idle(10);
+
+        scene.overlay.showText(60).text("The next scene will cover the energy use mechanics").pointAt(util.vector.topOf(burnerLocation)).placeNearTarget().attachKeyFrame();
+
+        scene.idle(70);
+
+
+
+
+
+
+    }
+
+
+
 
     private static void setEnergyLevel(EnergeticBlazeBurnerBlockEntity burner, EnergeticBlazeBurner.EnergyLevel level){
         switch(level ){
@@ -86,11 +269,13 @@ public class EnergeticBlazeBurnerPonder {
 
 
 
-    private static void setConnectedDirections(CompoundTag pipeTag){
+    private static CompoundTag setConnectedDirections(CompoundTag pipeTag){
         var extractingSides = pipeTag.getByteArray("ExtractingSides");
 
         if(!Arrays.equals(extractingSides, new byte[]{})){
             pipeTag.putByteArray("ExtractingSides", new byte[]{0,0,0,1,0,0});
         }
+
+        return pipeTag;
     }
 }
