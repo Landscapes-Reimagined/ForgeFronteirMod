@@ -35,7 +35,7 @@ public class CsaFixFillingTankMixin {
         ItemStack Itemtank = itemstack;
         double fluidAmount;
         fluidAmount = CustomFluidHandlerItemStack.isTankEmpty(player, itemstack);
-        var fillable = ItemTags.create(ResourceLocation.parse("create_sa:fillable"));
+        @SuppressWarnings("removal") var fillable = ItemTags.create(new ResourceLocation("create_sa:fillable"));
 
         if(fluidAmount <= 0){
             return;

@@ -34,7 +34,7 @@ public class CsaFuelingTankMixin {
         ItemStack Itemtank = itemstack;
         double fluidAmount;
         fluidAmount = CustomFluidHandlerItemStack.isTankEmpty(player, itemstack);
-        var fuelable = ItemTags.create(ResourceLocation.parse("create_sa:fuelable"));
+        @SuppressWarnings("removal") var fuelable = ItemTags.create(new ResourceLocation("create_sa:fuelable"));
 
         if(fluidAmount <= 0){
             return;

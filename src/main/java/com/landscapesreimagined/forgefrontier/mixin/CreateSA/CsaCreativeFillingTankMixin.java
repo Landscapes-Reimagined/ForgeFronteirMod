@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 
+@SuppressWarnings("ALL")
 @Mixin(CreativeFillingTankItemInInventoryTickProcedure.class)
 public class CsaCreativeFillingTankMixin {
 
@@ -33,8 +34,8 @@ public class CsaCreativeFillingTankMixin {
         if(!(entity instanceof Player player))
             return;
 
-        var fillable = ItemTags.create(ResourceLocation.parse("create_sa:fillable"));
-        var fuelable = ItemTags.create(ResourceLocation.parse("create_sa:fuelable"));
+        var fillable = ItemTags.create(new ResourceLocation("create_sa:fillable"));
+        var fuelable = ItemTags.create(new ResourceLocation("create_sa:fuelable"));
 
 
         for (int i = 0; i < 4; i++) {
