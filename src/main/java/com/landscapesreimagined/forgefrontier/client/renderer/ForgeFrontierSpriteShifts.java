@@ -8,8 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 public class ForgeFrontierSpriteShifts {
 
     public static final SpriteShiftEntry
-            BURNER_FLAME = SpriteShifter.get(new ResourceLocation(ForgeFrontier.MODID, "block/blaze_burner_flame"), new ResourceLocation(ForgeFrontier.MODID, "block/blaze_burner_flame_scroll")),
-            SUPER_BURNER_FLAME = SpriteShifter.get(new ResourceLocation(ForgeFrontier.MODID,"block/blaze_burner_flame"), new ResourceLocation(ForgeFrontier.MODID, "block/blaze_burner_flame_superheated_scroll"));
+            BURNER_FLAME = SpriteShifter.get(
+                    ForgeFrontier.asResource( "block/blaze_burner_flame"), 
+                ForgeFrontier.asResource("block/blaze_burner_flame_scroll")),
+            SUPER_BURNER_FLAME = SpriteShifter.get(ForgeFrontier.asResource("block/blaze_burner_flame"), ForgeFrontier.asResource("block/blaze_burner_flame_superheated_scroll"));
 
 
 

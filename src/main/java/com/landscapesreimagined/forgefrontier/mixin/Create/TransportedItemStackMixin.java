@@ -59,8 +59,8 @@ public class TransportedItemStackMixin implements IndustrialProcessingTransporte
 
     @Inject(method = "read", at = @At(value="RETURN"), remap = false, locals = LocalCapture.CAPTURE_FAILHARD)
     private static void readProcessedBy(CompoundTag nbt, CallbackInfoReturnable<TransportedItemStack> cir, TransportedItemStack stack){
-        ResourceLocation processedByID = new ResourceLocation(nbt.getString("processedBy"));
-        ResourceLocation DDProcessedByID = new ResourceLocation(nbt.getString("industrialProcessedBy"));
+        ResourceLocation processedByID = ResourceLocation.tryParse(nbt.getString("processedBy"));
+        ResourceLocation DDProcessedByID = ResourceLocation.tryParse(nbt.getString("industrialProcessedBy"));
 
         FanProcessingType cType = FanProcessingTypeRegistry.getType(processedByID);
         InterfaceIndustrialProcessingType ddType = DDFanProcessingTypeRegistry.getType(DDProcessedByID);

@@ -1062,5 +1062,23 @@
     },
     "done": true
   },
+  "advanced_ae:recipes/misc/reactionchamber": {
+    "criteria": {
+      "hasItem": "2025-03-01 15:02:59 -0800"
+    },
+    "done": true
+  },
+  "ae2:recipes/misc/network/parts/toggle_bus_inverted_alt": {
+    "criteria": {
+      "has_toggle_bus": "2025-03-01 15:05:30 -0800"
+    },
+    "done": true
+  },
+  "create:display_link": {
+    "criteria": {
+      "0": "2025-03-01 17:11:16 -0800"
+    },
+    "done": true
+  },
   "DataVersion": 3465
 }

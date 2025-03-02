@@ -28,6 +28,10 @@ public class AE2InternalEnergyBuffer implements IAEPowerStorage {
         this(Config.DEFAULT_MACHINE_INTERNAL_ENERGY_CAPACITY.get(), Config.DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT.get(), 0);
     }
 
+    public void setEnergyCapacity(double capacity){
+        this.energyCapacity = capacity;
+    }
+
 
     @Override
     public double injectAEPower(double amt, Actionable mode) {

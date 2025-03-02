@@ -116,7 +116,7 @@ public class EnergeticBlazeBurnerPonder {
         scene.idle(2);
         scene.world.showSection(energySel, Direction.WEST);
         scene.world.modifyBlockEntityNBT(util.select.position(pipeOutputPos), EnergyPipeTileEntity.class, EnergeticBlazeBurnerPonder::setConnectedDirections, true);
-        scene.world.modifyBlock(pipeOutputPos, (pipeState) -> pipeState.setValue(PipeBlock.SOUTH, true), false);
+//        scene.world.modifyBlock(pipeOutputPos, (pipeState) -> pipeState.setValue(PipeBlock.SOUTH, true), false);
         scene.world.modifyBlockEntity(pipeOutputPos, EnergyPipeTileEntity.class, (pipe) -> pipe.setExtracting(Direction.SOUTH, true));
         scene.world.modifyBlockEntity(burnerLocation, EnergeticBlazeBurnerBlockEntity.class, (b) -> EnergeticBlazeBurnerPonder.setEnergyLevel(b, EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE));
         scene.world.modifyBlock(burnerLocation, (blockState -> blockState.setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE)), false);
@@ -166,21 +166,10 @@ public class EnergeticBlazeBurnerPonder {
                 .placeNearTarget();
         scene.idle(90);
 
-//        Class<DeployerBlockEntity> beType = DeployerBlockEntity.class;
-//        scene.world.modifyBlockEntityNBT(util.select.position(4, 1, 2), beType,
-//                nbt -> nbt.put("HeldItem", AllItems.BLAZE_CAKE.asStack()
-//                        .serializeNBT()));
-//
-//        scene.world.showSection(util.select.fromTo(3, 0, 5, 2, 0, 5), Direction.UP);
-//        scene.idle(5);
-//        scene.world.showSection(util.select.fromTo(4, 1, 2, 4, 1, 5), Direction.DOWN);
-//        scene.idle(5);
-//        scene.world.showSection(util.select.fromTo(2, 1, 4, 2, 1, 5), Direction.DOWN);
-//        scene.idle(10);
-
         scene.overlay.showText(100)
                 .attachKeyFrame()
                 .text("The feeding process can be automated using Deployers or Mechanical Arms, and modpack version 2.3.0 will allow for fluid input")
+                .placeNearTarget()
                 .pointAt(util.vector.blockSurface(burnerLocation, Direction.UP));
         scene.idle(110);
 
@@ -241,16 +230,131 @@ public class EnergeticBlazeBurnerPonder {
         scene.world.hideSection(util.select.fromTo(burnerLocation.north(), new BlockPos(7, 1, 0)), Direction.NORTH);
         scene.idle(10);
 
-        scene.overlay.showText(60).text("The next scene will cover the energy use mechanics").pointAt(util.vector.topOf(burnerLocation)).placeNearTarget().attachKeyFrame();
+        scene.overlay.showText(60)
+                .text("The next scene will cover the energy use mechanics")
+                .pointAt(util.vector.topOf(burnerLocation))
+                .placeNearTarget()
+                .attachKeyFrame();
 
         scene.idle(70);
 
 
+    }
+
+    public static void energyUseScene(SceneBuilder scene, SceneBuildingUtil util) {
+        scene.title("energetic_energy_use", "Energetic Blaze's Energy Use");
+
+        scene.configureBasePlate(0, 0, 7);
+        scene.showBasePlate();
+        scene.idle(5);
+        BlockPos energyCellPos = new BlockPos(1, 2, 4);
+        BlockPos controllerPos = new BlockPos(1, 1, 4);
 
 
 
+        BlockPos burnerLocation = new BlockPos(3, 1, 3);
+
+        BlockPos basin = burnerLocation.above();
+        Vec3 topOfBasin = util.vector.topOf(basin);
+        Selection Kinetics = util.select.fromTo(3,4,3, 4, 4, 3);
+        BlockPos mixerLocation = basin.above(2);
+
+        BlockPos pipeOutputPos = new BlockPos(5, 1, 3);
+        Selection energySel = util.select.fromTo(4, 1, 3, 5, 1, 4);
+
+        scene.world.showSection(util.select.position(burnerLocation), Direction.DOWN);
+        scene.idle(5);
+
+        scene.world.showSection(energySel, Direction.WEST);
+        scene.world.showSection(util.select.fromTo(2, 1, 3, 1, 1, 3).add(util.select.fromTo(controllerPos,energyCellPos)), Direction.EAST);
+        scene.idle(5);
+        scene.world.modifyBlock(energyCellPos, (cell) -> cell.setValue(EnergyCellBlock.ENERGY_STORAGE, EnergyCellBlock.MAX_FULLNESS), false);
+        scene.world.modifyBlock(controllerPos, (controller) -> controller.setValue(ControllerBlock.CONTROLLER_STATE, ControllerBlock.ControllerBlockState.online), false);
+        scene.idle(5);
+
+        scene.world.modifyBlock(burnerLocation, (state) -> state.setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.INFUSE), false);
+        scene.idle(10);
+
+        scene.overlay.showText(60).text("Energetic Blaze Burners use Forge Energy and AE to complete a recipe")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector.topOf(burnerLocation));
+        scene.idle(70);
+        scene.overlay.showText(80).text("They have an internal energy buffer of 500,000 FE and 1,000,000 AE")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector.topOf(burnerLocation));
+        scene.idle(90);
+        scene.idle(20);
+        scene.overlay.showControls(new InputWindowElement(util.vector.topOf(burnerLocation), Pointing.DOWN).rightClick()
+                .withItem(AllItems.BLAZE_CAKE.asStack()), 30);
+        scene.idle(7);
+        scene.world.modifyBlock(burnerLocation, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.SEETHING), false);
+        scene.idle(33);
+        scene.overlay.showText(80).text("Which increases to 750,000 FE and 1,500,000 AE if the Energetic Blaze Burner is superheated")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector.topOf(burnerLocation));
+        scene.idle(90);
+        scene.world.setKineticSpeed(Kinetics, 32);
+        scene.world.showSection(Kinetics, Direction.NORTH);
+        scene.world.showSection(util.select.position(basin), Direction.SOUTH);
+        scene.world.modifyBlockEntity(basin, BasinBlockEntity.class, (b) -> b.onWrenched(Direction.NORTH));
+        scene.idle(10);
+        scene.overlay.showText(70)
+                .text("The energy they use per tick is determined by the speed of the mixer")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector.centerOf(mixerLocation));
+
+        scene.idle(80);
+
+
+        scene.world.modifyBlockEntity(
+                mixerLocation,
+                MechanicalMixerBlockEntity.class,
+                MechanicalMixerBlockEntity::startProcessingBasin
+        );
+
+        scene.overlay.showText(70)
+                .text("However, the total §o§namount§r of energy used is determined by the recipe you are making")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.centerOf(basin));
+        scene.idle(80);
+
+        scene.overlay.showText(80)
+                .text("For example, a Crystallization recipe with a mixer rotating at 32 RPM and a total energy use of 50,000 FE will use 820 FE per tick")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.centerOf(basin));
+        scene.idle(90);
+
+        scene.overlay.showText(60)
+                .text("When executing an Infusion recipe, the amount of FE used is halved")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.centerOf(controllerPos));
+        scene.idle(70);
+
+        scene.overlay.showText(100)
+                .text("Therefor, an Energetic Infusion recipe with a mixer rotating at 128 RPM and a total energy use of 500,000 AE will use 16,129.032 AE per tick, and 8065 FE per tick")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.centerOf(basin));
+        scene.idle(110);
+
+
+
+
+
+//        scene.world.showSection(, Direction.NORTH);
 
     }
+
+
+
+
 
 
 

@@ -180,11 +180,14 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
                 (int) (Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get() * Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER.get()),
                 (int) (Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get() * Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER.get())
             );
+            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get() * 1.5);
 
         }else{
             this.energyBuffer.setCapacity(Config.ENERGETIC_BLAZE_FE_CAPACITY.get());
             this.energyBuffer.setInsertExtract(Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get());
             this.energyBuffer.cullEnergy();
+
+            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get());
         }
 
 

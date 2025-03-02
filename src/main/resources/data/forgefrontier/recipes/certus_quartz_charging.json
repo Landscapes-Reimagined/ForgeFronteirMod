@@ -7,6 +7,10 @@
     {
       "item": "ae2:certus_quartz_crystal",
       "count": 64
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 500
     }
   ],
   "results": [

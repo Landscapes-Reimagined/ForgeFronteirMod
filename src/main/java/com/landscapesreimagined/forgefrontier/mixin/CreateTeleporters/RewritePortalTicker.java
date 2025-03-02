@@ -124,7 +124,7 @@ public class RewritePortalTicker {
 
             System.out.println(dim);
 
-            ResourceLocation dimensionID = new ResourceLocation(dim);
+            ResourceLocation dimensionID = ResourceLocation.tryParse(dim);
             ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, dimensionID);
 
             double tpX = tpLink.getOrCreateTag().getDouble("xpo");

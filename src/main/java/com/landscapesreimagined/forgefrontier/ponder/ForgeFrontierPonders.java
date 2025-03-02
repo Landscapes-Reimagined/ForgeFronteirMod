@@ -12,6 +12,7 @@ public class ForgeFrontierPonders {
 
         HELPER.addStoryBoard(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK, "energize_main", EnergeticBlazeBurnerPonder::introScene);
         HELPER.addStoryBoard(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK, "energize_main", EnergeticBlazeBurnerPonder::mixerScene);
+        HELPER.addStoryBoard(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK, "energize_main", EnergeticBlazeBurnerPonder::energyUseScene);
     }
 
 

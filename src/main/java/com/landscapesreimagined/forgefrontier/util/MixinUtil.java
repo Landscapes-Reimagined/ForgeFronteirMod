@@ -116,9 +116,9 @@ public class MixinUtil {
                 return;
 
             Optional<ICuriosItemHandler> curiosItemHandler = curiosItemHandlerLazyOptional.resolve();
-            boolean inCurios = curiosItemHandler.map(iCuriosItemHandler -> iCuriosItemHandler.isEquipped((itemStack -> itemStack.is(ItemTags.create(new ResourceLocation("create_sa:jetpack")))))).orElse(false);
+            boolean inCurios = curiosItemHandler.map(iCuriosItemHandler -> iCuriosItemHandler.isEquipped((itemStack -> itemStack.is(ItemTags.create(ResourceLocation.parse("create_sa:jetpack")))))).orElse(false);
 
-            if (stack.is(ItemTags.create(new ResourceLocation("create_sa:jetpack"))) || inCurios) {
+            if (stack.is(ItemTags.create(ResourceLocation.parse("create_sa:jetpack"))) || inCurios) {
                 entity.getPersistentData().putBoolean("CsaFlying", csaFlying);
             }
 

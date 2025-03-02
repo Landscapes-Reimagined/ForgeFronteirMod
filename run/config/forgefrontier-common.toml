@@ -16,10 +16,10 @@
 	energetic_blaze_energy_receive = 32768
 	#Default Energetic Blaze AE energy capacity
 	#Range: 0.0 ~ 1.7976931348623157E308
-	energetic_blaze_ae_energy_capacity = 5000000.0
+	energetic_blaze_ae_energy_capacity = 1000000.0
 	#Default Energetic Blaze maximum energy receive rate
 	#Range: 0.0 ~ 1.7976931348623157E308
-	energetic_blaze_max_ae_receive = 327680.0
+	energetic_blaze_max_ae_receive = 163840.0
 	#Default internal requiredEnergy max extract rate of Forge Frontier machines
 	#NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!
 	#Range: > 0

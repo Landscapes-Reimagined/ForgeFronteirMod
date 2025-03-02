@@ -94,7 +94,7 @@ public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
         itemMap.forEach((jsonElement -> {
             JsonObject entry = jsonElement.getAsJsonObject();
             if(entry.has("item") && entry.has("count"))
-                this.itemCountMap.put(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.get("item").getAsString())), entry.get("count").getAsInt());
+                this.itemCountMap.put(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(entry.get("item").getAsString())), entry.get("count").getAsInt());
         }));
 
 

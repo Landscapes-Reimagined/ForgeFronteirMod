@@ -30,6 +30,7 @@
     "CreateSA.FixNetheriteJetpackMixin",
     "CreateTeleporters.FluidTankAccessor",
     "CreateTeleporters.RewritePortalTicker",
+    "JEI.BuildIconRecipeSlotMixin",
     "Minecraft.LivingEntityMixin",
     "Minecraft.PlayerEntityMixin",
     "netherremastered.SealPeiceBottomRightNoCrumbleMixin",

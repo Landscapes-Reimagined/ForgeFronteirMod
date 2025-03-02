@@ -64,8 +64,8 @@ public class Config
         ENERGETIC_BLAZE_INFUSE_CAPACITY = BUILDER.comment("Default Energetic Blaze FE energy capacity when the blaze is Infusing").defineInRange("energetic_blaze_infusing_energy_capacity", 750000, ENERGETIC_BLAZE_FE_CAPACITY.getDefault(), Integer.MAX_VALUE);
         ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER = BUILDER.comment("Default multiplier for the Energetic Blaze's max FE receive and extract rat when Infusing").defineInRange("ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER".toLowerCase(), 1.5, 1, 15);
 
-        ENERGETIC_BLAZE_AE_CAPACITY = BUILDER.comment("Default Energetic Blaze AE energy capacity").defineInRange("energetic_blaze_ae_energy_capacity", 5000000, 0, Double.MAX_VALUE);
-        ENERGETIC_BLAZE_MAX_AE_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum energy receive rate").defineInRange("energetic_blaze_max_ae_receive", 327680, 0, Double.MAX_VALUE);
+        ENERGETIC_BLAZE_AE_CAPACITY = BUILDER.comment("Default Energetic Blaze AE energy capacity").defineInRange("energetic_blaze_ae_energy_capacity", 1000000, 0, Double.MAX_VALUE);
+        ENERGETIC_BLAZE_MAX_AE_RECEIVE = BUILDER.comment("Default Energetic Blaze maximum energy receive rate").defineInRange("energetic_blaze_max_ae_receive", 163840, 0, Double.MAX_VALUE);
 
 
         BUILDER.comment("Miscellaneous Settings").push(CATEGORY_MISC);
@@ -83,7 +83,7 @@ public class Config
 
     private static boolean validateItemName(final Object obj)
     {
-        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName));
+        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.tryParse(itemName));
     }
 
     private static boolean validateCurioSlots(Object obj){
@@ -99,8 +99,8 @@ public class Config
             Optional<ISlotType> serverOptional = CuriosApi.getSlot(rs, false);
             Optional<ISlotType> clientOptional = CuriosApi.getSlot(rs, true);
 
-            if(serverOptional.isEmpty() && clientOptional.isEmpty())
-                return false;
+            if(serverOptional.isEmpty() && clientOptional.isEmpty()) return false;
+
         }
 
         return true;

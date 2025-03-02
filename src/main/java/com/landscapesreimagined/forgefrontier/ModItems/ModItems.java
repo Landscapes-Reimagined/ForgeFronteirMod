@@ -21,6 +21,7 @@ public class ModItems {
     public static final RegistryObject<Item> ANIM_TEST = MOD_ITEMS.register("animation_test", () -> new Item(new Item.Properties()));
 
     public static final ItemEntry<Item> FORGE_ENERGY = FORGE_FRONTIER_REGISTRATE.item("fe_icon", Item::new).lang("Forge Energy Icon").register();
+    public static final ItemEntry<Item> APPLIED_ENERGISTICS_ENERGY = FORGE_FRONTIER_REGISTRATE.item("ae_icon", Item::new).lang("Applied Energistics Energy Icon").register();
 //monkey made me remove these :(
 //    public static final RegistryObject<Item> NOVA_ANIM_TEST = MOD_ITEMS.register("nova_animation_test", () -> new Item(new Item.Properties()));
 //    public static final RegistryObject<Item> GLOBE_ANIM_TEST = MOD_ITEMS.register("globe_animation_test", () -> new Item(new Item.Properties()));

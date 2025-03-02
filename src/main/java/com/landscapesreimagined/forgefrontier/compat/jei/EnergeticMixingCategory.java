@@ -4,6 +4,7 @@ import appeng.core.definitions.AEBlocks;
 import com.landscapesreimagined.forgefrontier.ForgeFrontier;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
+import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
 import com.landscapesreimagined.forgefrontier.client.renderer.GUI.ForgeFrontierTextures;
 import com.landscapesreimagined.forgefrontier.recipies.EnergeticMixingRecipe;
 import com.landscapesreimagined.forgefrontier.recipies.EnergyCondition;
@@ -26,10 +27,13 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -143,19 +147,28 @@ public class EnergeticMixingCategory extends BasinCategory {
         }
 
         if(energyCondition == EnergyCondition.CRYSTALLIZE || energyCondition == EnergyCondition.INFUSE){
-            Item energyStack = ForgeRegistries.ITEMS.getValue(new ResourceLocation("create_new_age", "generator_coil"));
-            Item renderStack = (energyStack != Items.AIR ? energyStack : CAItems.COPPER_SPOOL.get());
-            if(renderStack != null)
-                builder
-                    .addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 106)
-                    .addItemStack(renderStack.getDefaultInstance());
+            double feMult = energyCondition == EnergyCondition.INFUSE ? 0.5d : 1;
+            builder
+                .addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 106)
+
+                .addRichTooltipCallback((slot, tooltip) -> {
+                    tooltip.add(Component.translatable("recipe.forgefrontier.fe_use_key").withStyle(Style.EMPTY.withColor(0xFCD720)));
+                    tooltip.add(Component.translatable("recipe.forgefrontier.energy_amount").append(Integer.toString((int) (recipe.getRequiredEnergy() * feMult))).withStyle(ChatFormatting.BLUE));
+                })
+                .addItemStack(ModItems.FORGE_ENERGY.asStack());
+
+
 
         }
 
         if(energyCondition == EnergyCondition.INFUSE){
             builder
                     .addSlot(RecipeIngredientRole.RENDER_ONLY, 153, 106)
-                    .addItemStack(AEBlocks.DENSE_ENERGY_CELL.stack());
+                    .addRichTooltipCallback((slot, tooltip) -> {
+                        tooltip.add(Component.translatable("recipe.forgefrontier.ae_use_key").withStyle(Style.EMPTY.withColor(0xC295F0)));
+                        tooltip.add(Component.translatable("recipe.forgefrontier.energy_amount").append(Integer.toString(recipe.getRequiredEnergy())).withStyle(ChatFormatting.BLUE));
+                    })
+                    .addItemStack(ModItems.APPLIED_ENERGISTICS_ENERGY.asStack());
         }
     }
 

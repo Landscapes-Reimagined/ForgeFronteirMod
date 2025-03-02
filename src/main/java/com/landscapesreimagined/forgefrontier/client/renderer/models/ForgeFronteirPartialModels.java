@@ -37,7 +37,7 @@ public class ForgeFronteirPartialModels {
 
 
     private static PartialModel block(String path) {
-        return new PartialModel(new ResourceLocation(ForgeFrontier.MODID, "block/" + path));
+        return new PartialModel(ForgeFrontier.asResource("block/" + path));
     }
 
     public static void register(){}

@@ -2,6 +2,12 @@
   "block.forgefrontier.energetic_blaze_burner": "Energetic Blaze Burner",
   "block.forgefrontier.empty_energetic_blaze_burner": "Empty Energetic Blaze Burner",
   "itemGroup.forgefrontier.forge_frontier_tab": "Forge Frontier",
+  "item.forgefrontier.fe_icon": "Forge Energy Icon",
+  "item.forgefrontier.ae_icon": "AE Energy Icon",
+  "recipe.forgefrontier.ae_use_key": "Applied Energetics(AE) Energy",
+  "recipe.forgefrontier.fe_use_key": "Forge(FE) Energy",
+  "recipe.forgefrontier.energy_amount": "Energy: ",
+  "create.recipe.energetic_mixing": "Energetic Mixing",
   "forgefrontier.recipe.energy_level_requirement.crystallize": "Crystallize",
   "forgefrontier.recipe.energy_level_requirement.infuse": "Energetic Infusion",
   "forgefrontier.ponder.energetic_blaze_burner_intro.header": "You and the Energetic Blaze Burner",
@@ -18,8 +24,14 @@
   "forgefrontier.ponder.energetic_mixing.text_5": "The feeding process can be automated using Deployers or Mechanical Arms, and modpack version 2.3.0 will allow for fluid input",
   "forgefrontier.ponder.energetic_mixing.text_6": "This processing is just like any other mechanical mixer processing",
   "forgefrontier.ponder.energetic_mixing.text_7": "However, they use FE as well",
-  "forgefrontier.ponder.energetic_mixing.text_8": "The next scene will cover the Energetic Blaze's energy use mechanics"
-
-
-
+  "forgefrontier.ponder.energetic_mixing.text_8": "The next scene will cover the Energetic Blaze's energy use mechanics",
+  "forgefrontier.ponder.energetic_energy_use": "Energetic Blaze's Energy Use",
+  "forgefrontier.ponder.energetic_energy_use.text_1": "Energetic Blaze Burners use Forge Energy and AE to complete a recipe",
+  "forgefrontier.ponder.energetic_energy_use.text_2": "They have an internal energy buffer of 500,000 FE and 1,000,000 AE",
+  "forgefrontier.ponder.energetic_energy_use.text_3": "Which increases to 750,000 FE and 1,500,000 AE if the Energetic Blaze Burner is superheated",
+  "forgefrontier.ponder.energetic_energy_use.text_4": "The energy they use per tick is determined by the speed of the mixer",
+  "forgefrontier.ponder.energetic_energy_use.text_5": "However, the total §o§namount§r of energy used is determined by the recipe you are making",
+  "forgefrontier.ponder.energetic_energy_use.text_6": "For example, a Crystallization recipe with a mixer rotating at 32 RPM and a total energy use of 50,000 FE will use 820 FE per tick",
+  "forgefrontier.ponder.energetic_energy_use.text_7": "When executing an Infusion recipe, the amount of FE used is halved",
+  "forgefrontier.ponder.energetic_energy_use.text_8": "Therefor, an Energetic Infusion recipe with a mixer rotating at 128 RPM and a total energy use of 500,000 AE will use 16,129.032 AE per tick, and 8065 FE per tick"
 }

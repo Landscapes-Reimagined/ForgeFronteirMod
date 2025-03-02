@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
 public enum ForgeFrontierRecipeTypes implements IRecipeTypeInfo {
-    ENERGETIC_MIXING(EnergeticMixingRecipe::new, new ResourceLocation(ForgeFrontier.MODID, "energetic_mixing"));
+    ENERGETIC_MIXING(EnergeticMixingRecipe::new, ForgeFrontier.asResource("energetic_mixing"));
 
     public final ResourceLocation id;
     private final RegistryObject<RecipeSerializer<?>> serializerObject;
