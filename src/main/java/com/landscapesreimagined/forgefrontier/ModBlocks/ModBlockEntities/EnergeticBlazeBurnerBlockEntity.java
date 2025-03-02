@@ -21,6 +21,7 @@ import com.landscapesreimagined.forgefrontier.util.AE2InternalEnergyBuffer;
 import com.landscapesreimagined.forgefrontier.util.MachineInternalEnergyBuffer;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -180,14 +181,19 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
                 (int) (Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get() * Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER.get()),
                 (int) (Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get() * Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE_INJECT_INFUSE_MULTIPLIER.get())
             );
-            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get() * 1.5);
 
         }else{
             this.energyBuffer.setCapacity(Config.ENERGETIC_BLAZE_FE_CAPACITY.get());
             this.energyBuffer.setInsertExtract(Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get());
             this.energyBuffer.cullEnergy();
 
+        }
+
+        if(getHeatLevel().isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING)){
+            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get() * 1.5);
+        }else{
             this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get());
+
         }
 
 

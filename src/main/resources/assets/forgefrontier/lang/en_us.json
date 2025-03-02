@@ -27,7 +27,7 @@
   "forgefrontier.ponder.energetic_mixing.text_8": "The next scene will cover the Energetic Blaze's energy use mechanics",
   "forgefrontier.ponder.energetic_energy_use.header": "Energetic Blaze's Energy Use",
   "forgefrontier.ponder.energetic_energy_use.text_1": "Energetic Blaze Burners use Forge Energy and AE to complete a recipe",
-  "forgefrontier.ponder.energetic_energy_use.text_2": "They have an internal energy buffer of 500,000 FE and 1,000,000 AE",
+  "forgefrontier.ponder.energetic_energy_use.text_2": "Which increases to 1,500,000 AE if the Energetic Blaze Burner is superheated, and 750,000 FE if the Energetic Blaze is Infusing",
   "forgefrontier.ponder.energetic_energy_use.text_3": "Which increases to 750,000 FE and 1,500,000 AE if the Energetic Blaze Burner is superheated",
   "forgefrontier.ponder.energetic_energy_use.text_4": "The energy they use per tick is determined by the speed of the mixer",
   "forgefrontier.ponder.energetic_energy_use.text_5": "However, the total §o§namount§r of energy used is determined by the recipe you are making",

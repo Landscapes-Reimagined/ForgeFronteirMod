@@ -291,11 +291,11 @@ public class EnergeticBlazeBurnerPonder {
         scene.idle(7);
         scene.world.modifyBlock(burnerLocation, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.SEETHING), false);
         scene.idle(33);
-        scene.overlay.showText(80).text("Which increases to 750,000 FE and 1,500,000 AE if the Energetic Blaze Burner is superheated")
+        scene.overlay.showText(90).text("Which increases to 1,500,000 AE if the Energetic Blaze Burner is superheated, and 750,000 FE if the Energetic Blaze is Infusing")
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector.topOf(burnerLocation));
-        scene.idle(90);
+        scene.idle(100);
         scene.world.setKineticSpeed(Kinetics, 32);
         scene.world.showSection(Kinetics, Direction.NORTH);
         scene.world.showSection(util.select.position(basin), Direction.SOUTH);

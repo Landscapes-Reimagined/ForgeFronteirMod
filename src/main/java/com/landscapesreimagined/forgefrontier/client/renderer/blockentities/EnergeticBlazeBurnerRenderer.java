@@ -165,21 +165,25 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
 
         PartialModel blazeModel = getPartialModel(heatLevel, energyLevel, blockAbove);
 
-        if(partialBlazeModelNeedsUnderLayer(blazeModel)){
-            PartialModel underInfuseModel = blockAbove ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_ON : ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ON;
-            SuperByteBuffer blazeBuffer = CachedBufferer.partial(underInfuseModel, blockState);
-            if (modelTransform != null)
-                blazeBuffer.transform(modelTransform);
-            blazeBuffer.translate(0, headY, 0);
-            draw(blazeBuffer, horizontalAngle, ms, solid);
 
-        }
+
 
         SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
         if (modelTransform != null)
             blazeBuffer.transform(modelTransform);
         blazeBuffer.translate(0, headY, 0);
         draw(blazeBuffer, horizontalAngle, ms, solid);
+
+        if(partialBlazeModelNeedsUnderLayer(blazeModel)){
+            PartialModel underInfuseModel = blockAbove ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_ON : ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ON;
+            SuperByteBuffer underBlazeBuffer = CachedBufferer.partial(underInfuseModel, blockState);
+            if (modelTransform != null)
+                underBlazeBuffer.transform(modelTransform);
+            underBlazeBuffer.translate(0, headY, 0);
+
+            draw(underBlazeBuffer, horizontalAngle, ms, solid);
+
+        }
 
 
 
