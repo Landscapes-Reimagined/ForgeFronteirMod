@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +14,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("ALL")
@@ -32,18 +34,24 @@ public abstract class PlayerEntityMixin extends LivingEntity{
         String[] slots = Config.getTickingCurioSlots();
 
         Player p = (Player) this.self();
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(p).resolve();
 
-        if(curiosInventory.isPresent()){
+        LazyOptional<ICuriosItemHandler> curiosInventoryOptional = CuriosApi.getCuriosInventory(p);
+
+        if(!curiosInventoryOptional.isPresent()){
             return;
         }
 
+        Optional<ICuriosItemHandler> curiosInventory = curiosInventoryOptional.resolve();
 
-        var slotList = curiosInventory.orElseThrow().findCurios(slots);
+        if(!curiosInventory.isEmpty()){
+            return;
+        }
+
+        List<SlotResult> slotList = curiosInventory.get().findCurios(slots);
 
         for(SlotResult slot : slotList){
             slot.stack().inventoryTick(p.level(), p, slot.slotContext().index(), false);
-            System.out.println("Ticking " + slot.slotContext().identifier());
+//            System.out.println("Ticking " + slot.slotContext().identifier());
             slot.stack().onArmorTick(p.level(), p);
         }
     }
