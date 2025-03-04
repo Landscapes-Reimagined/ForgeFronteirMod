@@ -34,7 +34,7 @@ public class ModBlocks {
                     .transform(pickaxeOnly())
                     .addLayer(() -> RenderType::cutoutMipped)
                     .tag(AllTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_BLASTING.tag, AllTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SMOKING.tag, AllTags.AllBlockTags.FAN_TRANSPARENT.tag, AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
-                    .loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
+                    .loot((lt, block) -> lt.add(block, EnergeticBlazeBurner.buildLootTable()))
                     .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
                     .onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
                     .onRegister(interactionBehaviour(new BlazeBurnerInteractionBehaviour()))

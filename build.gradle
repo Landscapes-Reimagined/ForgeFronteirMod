@@ -317,6 +317,12 @@ dependencies {
     //Applied Energestics 2
     implementation fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
+    //AE2 wireless terminals
+    implementation fg.deobf("curse.maven:applied-energistics-2-wireless-terminals-459929:${wtl_file}")
+
+    //Cloth Config
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
+
     //Create: Stuff and Additions
     implementation fg.deobf("curse.maven:create-stuff-additions-466792:${sa_file}")
 

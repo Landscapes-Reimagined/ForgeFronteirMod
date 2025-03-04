@@ -3,21 +3,44 @@ package com.landscapesreimagined.forgefrontier.ModBlocks;
 import appeng.api.orientation.IOrientableBlock;
 import appeng.api.orientation.IOrientationStrategy;
 import appeng.api.orientation.OrientationStrategies;
+import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.ModBlockEntities;
 import com.landscapesreimagined.forgefrontier.ModItems.ModBlockItems.EnergeticBlazeBurnerBlockItem;
+import com.landscapesreimagined.forgefrontier.ModItems.ModItems;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,6 +94,65 @@ public class EnergeticBlazeBurner extends BlazeBurnerBlock implements IOrientabl
                 .setValue(ENERGY_LEVEL, energyLevel);
     }
 
+    @Override
+    public @NotNull InteractionResult use(BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, InteractionHand hand,
+                                          @NotNull BlockHitResult blockRayTraceResult) {
+        ItemStack heldItem = player.getItemInHand(hand);
+        HeatLevel heat = state.getValue(HEAT_LEVEL);
+
+        if (AllItems.GOGGLES.isIn(heldItem) && heat != HeatLevel.NONE)
+            return onBlockEntityUse(world, pos, bbte -> {
+                if(!(bbte instanceof EnergeticBlazeBurnerBlockEntity ebbbe))
+                    return InteractionResult.FAIL;
+                if (ebbbe.hasGoggles())
+                    return InteractionResult.PASS;
+                ebbbe.setGoggles(true);
+                bbte.notifyUpdate();
+                return InteractionResult.SUCCESS;
+            });
+
+        if (heldItem.isEmpty() && heat != HeatLevel.NONE)
+            return onBlockEntityUse(world, pos, bbte -> {
+                if(!(bbte instanceof EnergeticBlazeBurnerBlockEntity ebbbe))
+                    return InteractionResult.FAIL;
+                if (!ebbbe.hasGoggles())
+                    return InteractionResult.PASS;
+                ebbbe.setGoggles(false);
+                bbte.notifyUpdate();
+                return InteractionResult.SUCCESS;
+            });
+
+//        if (heat == HeatLevel.NONE) {
+//            if (heldItem.getItem() instanceof FlintAndSteelItem) {
+//                world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
+//                        world.random.nextFloat() * 0.4F + 0.8F);
+//                if (world.isClientSide)
+//                    return InteractionResult.SUCCESS;
+//                heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+//                world.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
+//                return InteractionResult.SUCCESS;
+//            }
+//            return InteractionResult.PASS;
+//        }
+
+        boolean doNotConsume = player.isCreative();
+        boolean forceOverflow = !(player instanceof FakePlayer);
+
+        InteractionResultHolder<ItemStack> res =
+                tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
+        ItemStack leftover = res.getObject();
+        if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
+            if (heldItem.isEmpty()) {
+                player.setItemInHand(hand, leftover);
+            } else if (!player.getInventory()
+                    .add(leftover)) {
+                player.drop(leftover, false);
+            }
+        }
+
+        return res.getResult() == InteractionResult.SUCCESS ? InteractionResult.SUCCESS : InteractionResult.PASS;
+    }
+
     public static EnergyLevel getEnergyLevelOf(BlockState blockState) {
         return blockState.hasProperty(ENERGY_LEVEL) ? blockState.getValue(ENERGY_LEVEL)
                 : EnergyLevel.NONE;
@@ -79,6 +161,25 @@ public class EnergeticBlazeBurner extends BlazeBurnerBlock implements IOrientabl
     @Override
     public IOrientationStrategy getOrientationStrategy() {
         return OrientationStrategies.horizontalFacing();
+    }
+
+    public static LootTable.@NotNull Builder buildLootTable() {
+        LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+        BlazeBurnerBlock block = ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.get();
+        LootTable.Builder builder = LootTable.lootTable();
+        LootPool.Builder poolBuilder = LootPool.lootPool();
+
+        for (HeatLevel level : HeatLevel.values()) {
+            ItemLike drop = level == HeatLevel.NONE ? ModItems.EMPTY_BLAZE_BURNER.get() : ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.get();
+            poolBuilder.add(LootItem.lootTableItem(drop)
+                    .when(survivesExplosion)
+                    .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                            .setProperties(StatePropertiesPredicate.Builder.properties()
+                                    .hasProperty(HEAT_LEVEL, level))));
+        }
+
+        builder.withPool(poolBuilder.setRolls(ConstantValue.exactly(1)));
+        return builder;
     }
 
 

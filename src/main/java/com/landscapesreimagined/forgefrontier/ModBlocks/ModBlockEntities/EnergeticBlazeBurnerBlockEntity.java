@@ -15,33 +15,51 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import com.landscapesreimagined.forgefrontier.Config;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
-import com.landscapesreimagined.forgefrontier.mixin.Create.CurrentBasinRecipeAccessor;
 import com.landscapesreimagined.forgefrontier.recipies.EnergeticMixingRecipe;
 import com.landscapesreimagined.forgefrontier.util.AE2InternalEnergyBuffer;
 import com.landscapesreimagined.forgefrontier.util.MachineInternalEnergyBuffer;
+import com.landscapesreimagined.forgefrontier.util.helpers.MixinWorkaround;
+import com.mrh0.createaddition.index.CARecipes;
+import com.mrh0.createaddition.network.ObservePacket;
+import com.mrh0.createaddition.recipe.FluidRecipeWrapper;
+import com.mrh0.createaddition.recipe.liquid_burning.LiquidBurningRecipe;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity implements IEnergyStorage, IExternalPowerSink, IGridConnectedBlockEntity {
+import java.util.List;
+import java.util.Optional;
+
+public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity implements IHaveGoggleInformation, IEnergyStorage, IExternalPowerSink, IGridConnectedBlockEntity {
 
     //FE power buffer
     protected final MachineInternalEnergyBuffer energyBuffer;
@@ -58,24 +76,101 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             .setInWorldNode(true)
             .setTagName("proxy");
 
+    //Fluid stuff
+    protected LazyOptional<IFluidHandler> fluidCapability;
+    protected FluidTank tankInventory;
+    private Optional<LiquidBurningRecipe> recipeCache = Optional.empty();
+    private Fluid lastFluid = null;
+    private int updateTimeout = 10;
+    private boolean changed = true;
+    public boolean first = true;
+
     //recipe stuff
     @Nullable
     protected EnergeticMixingRecipe currentRecipe = null;
     protected boolean lastTickHadNoRecipie = true;
     protected double usedPower = 0;
 
-    @Nullable
-    protected Pair<Integer, String> currentMixer = null;
 
     public EnergeticBlazeBurnerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.energyBuffer = new MachineInternalEnergyBuffer(Config.ENERGETIC_BLAZE_FE_CAPACITY.get(), Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get());
         this.lazyBuffer = LazyOptional.of(() -> this.energyBuffer);
         this.internalAEBuffer = new AE2InternalEnergyBuffer(Config.ENERGETIC_BLAZE_AE_CAPACITY.get(), Config.ENERGETIC_BLAZE_MAX_AE_RECEIVE.get(), 0);
+        this.tankInventory = this.createInventory();
+        this.fluidCapability = LazyOptional.of(() -> this.tankInventory);
+
     }
 
     protected IManagedGridNode createMainNode() {
         return GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE);
+    }
+
+    protected SmartFluidTank createInventory() {
+        return new SmartFluidTank(4000, this::onFluidStackChanged);
+    }
+
+    protected void onFluidStackChanged(FluidStack newFluidStack) {
+        if (this.hasLevel()) {
+            this.update(newFluidStack);
+        }
+    }
+
+    private void update(FluidStack stack) {
+        if (!this.level.isClientSide()) {
+            if (stack.getFluid() != this.lastFluid) {
+                this.recipeCache = this.find(stack, this.level);
+            }
+
+            this.lastFluid = stack.getFluid();
+            this.changed = true;
+        }
+    }
+
+    public Optional<LiquidBurningRecipe> find(FluidStack stack, Level level) {
+        if (stack == null) {
+            return Optional.empty();
+        } else if (level == null) {
+            return Optional.empty();
+        } else {
+            return CARecipes.LIQUID_BURNING_TYPE.get() == null ? Optional.empty() : level.getRecipeManager().getRecipeFor((RecipeType)CARecipes.LIQUID_BURNING_TYPE.get(), new FluidRecipeWrapper(stack), level);
+        }
+    }
+
+    public void burningTick() {
+        if (!this.level.isClientSide()) {
+            if (this.first) {
+                this.update(this.tankInventory.getFluid());
+            }
+
+            this.first = false;
+            if (this.remainingBurnTime >= 1 || !this.recipeCache.isEmpty()) {
+                if (this.tankInventory.getFluidAmount() >= 100) {
+                    if (this.remainingBurnTime <= 10000) {
+                        try {
+                            this.remainingBurnTime += (this.recipeCache.get()).getBurnTime() / 10;
+                            this.activeFuel = (this.recipeCache.get()).isSuperheated() ? FuelType.SPECIAL : FuelType.NORMAL;
+                        } catch (Exception var2) {
+                            return;
+                        }
+
+                        this.tankInventory.drain(100, IFluidHandler.FluidAction.EXECUTE);
+                        BlazeBurnerBlock.HeatLevel prev = this.getHeatLevelFromBlock();
+                        this.playSound();
+                        this.updateBlockState();
+                        if (prev != this.getHeatLevelFromBlock()) {
+                            this.level.playSound(null, this.worldPosition, SoundEvents.BLAZE_AMBIENT, SoundSource.BLOCKS, 0.125F + this.level.random.nextFloat() * 0.125F, 1.15F - this.level.random.nextFloat() * 0.25F);
+                            this.spawnParticleBurst(this.activeFuel == FuelType.SPECIAL);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    public void setCurrentRecipe(EnergeticMixingRecipe recipe){
+        this.currentRecipe = recipe;
     }
 
 
@@ -101,6 +196,10 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         }
 
         //do server-side things
+
+        //update fluid
+
+        this.burningTick();
 
 
         //Fill internal buffer from our AE network
@@ -418,21 +517,14 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         BlockPos mixerPos = basinPos.above(2);
 
         //Never call in a null world!
-
         assert world != null;
-        if(!(world.getBlockEntity(mixerPos) instanceof MechanicalMixerBlockEntity mixer)) return null;
+        return MixinWorkaround.getMechanicalMixerBlockEntity(this, world, mixerPos);
 
-        Recipe<?> recipe = ((CurrentBasinRecipeAccessor) mixer).getCurrentRecipe();
-
-        if(recipe instanceof EnergeticMixingRecipe energeticMixingRecipe){
-            this.currentRecipe = energeticMixingRecipe;
-        }
-
-
-        return mixer;
-//        return null;
 
     }
+
+
+
 
 //    public EnergeticBlazeBurner.EnergyLevel getEnergyLevel(){
 //
@@ -451,8 +543,15 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         return this.goggles;
     }
 
+    public void setGoggles(boolean hasGoggles){
+        this.goggles = hasGoggles;
+    }
+
     public boolean hasHat(){
         return this.hat;
+    }
+    public void setHat(boolean hasHat){
+        this.hat = hasHat;
     }
 
 
@@ -465,6 +564,10 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             }
 
             return this.lazyBuffer.cast();
+        }
+
+        if(cap == ForgeCapabilities.FLUID_HANDLER && side != Direction.UP){
+            return this.fluidCapability.cast();
         }
 
         return super.getCapability(cap, side);
@@ -486,6 +589,8 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         compound.put("EnergyBuffer", this.energyBuffer.writeToTag());
         compound.put("AEEnergyBuffer", this.internalAEBuffer.writeToTag());
         this.mainNode.saveToNBT(compound);
+        compound.put("TankContent", this.tankInventory.writeToNBT(new CompoundTag()));
+
     }
 
     @Override
@@ -498,6 +603,64 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         this.energyBuffer.readTag(energyBufferTag);
         this.internalAEBuffer.readTag(AEBufferTag);
         this.mainNode.loadFromNBT(compound);
+
+        this.tankInventory.readFromNBT(compound.getCompound("TankContent"));
+    }
+
+    private boolean tryUpdateLiquid(ItemStack itemStack, boolean simulate) {
+        LazyOptional<IFluidHandlerItem> cap = itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        if (!cap.isPresent()) {
+            return false;
+        } else {
+            IFluidHandlerItem handler = cap.orElse(null);
+            if (handler.getFluidInTank(0).isEmpty()) {
+                return false;
+            } else {
+                FluidStack stack = handler.getFluidInTank(0);
+                Optional<LiquidBurningRecipe> recipe = this.find(stack, this.level);
+                if (!recipe.isPresent()) {
+                    return false;
+                } else {
+                    LazyOptional<IFluidHandler> tecap = this.getCapability(ForgeCapabilities.FLUID_HANDLER);
+                    if (!tecap.isPresent()) {
+                        return false;
+                    } else {
+                        IFluidHandler tehandler = tecap.orElse(null);
+                        if (tehandler.getTankCapacity(0) - tehandler.getFluidInTank(0).getAmount() < 1000) {
+                            return false;
+                        } else {
+                            if (!simulate) {
+                                tehandler.fill(new FluidStack(handler.getFluidInTank(0).getFluid(), 1000), IFluidHandler.FluidAction.EXECUTE);
+                            }
+
+                            if (!simulate) {
+                                this.level.playSound(null, this.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.125F + this.level.random.nextFloat() * 0.125F, 0.75F - this.level.random.nextFloat() * 0.25F);
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected boolean tryUpdateFuel(ItemStack itemStack, boolean forceOverflow, boolean simulate) {
+        if(this.isCreative()){
+            return false;
+        }else{
+            if (this.tryUpdateLiquid(itemStack, simulate)) {
+                return true;
+            }else{
+                return super.tryUpdateFuel(itemStack, forceOverflow, simulate);
+            }
+        }
+    }
+
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        ObservePacket.send(this.worldPosition, 0);
+        return this.containedFluidTooltip(tooltip, isPlayerSneaking, this.getCapability(ForgeCapabilities.FLUID_HANDLER));
     }
 
     @Override
@@ -661,4 +824,9 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     public void saveChanges() {
 
     }
+
+//    @Override
+//    public void onObserved(ServerPlayer serverPlayer, ObservePacket observePacket) {
+//        this.notifyUpdate();
+//    }
 }

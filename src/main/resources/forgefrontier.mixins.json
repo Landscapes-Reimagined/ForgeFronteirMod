@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "forgefrontier.refmap.json",
   "mixins": [
+    "Create.BasinBlockMixin",
     "Create.BasinOperatingBlockMixin",
     "Create.BasinRecipeMixin",
     "Create.BeltBlockEntityCreateDDCompat",
