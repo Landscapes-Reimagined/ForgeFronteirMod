@@ -366,7 +366,7 @@ public class EnergeticBlazeBurnerPonder {
             case CRYSTALLIZE: burner.setFE(500000);
             case INFUSE: {
                 burner.setFE(500000);
-                burner.setAE(5000000);
+//                burner.setAE(5000000);
             }
         }
     }

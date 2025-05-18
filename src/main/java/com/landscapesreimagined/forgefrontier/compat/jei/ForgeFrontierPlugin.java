@@ -69,7 +69,7 @@ public class ForgeFrontierPlugin implements IModPlugin {
     }
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return ForgeFrontier.asResource("forgefrontier_jei_mod_plugin");
+        return ForgeFrontier.asResource("forgefrontiercore_jei_mod_plugin");
     }
 
     private <T extends Recipe<?>> ForgeFrontierPlugin.CategoryBuilder<T> builder(Class<? extends T> recipeClass) {

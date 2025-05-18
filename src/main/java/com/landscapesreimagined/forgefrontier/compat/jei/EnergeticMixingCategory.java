@@ -147,13 +147,12 @@ public class EnergeticMixingCategory extends BasinCategory {
         }
 
         if(energyCondition == EnergyCondition.CRYSTALLIZE || energyCondition == EnergyCondition.INFUSE){
-            double feMult = energyCondition == EnergyCondition.INFUSE ? 0.5d : 1;
             builder
                 .addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 106)
 
                 .addRichTooltipCallback((slot, tooltip) -> {
-                    tooltip.add(Component.translatable("recipe.forgefrontier.fe_use_key").withStyle(Style.EMPTY.withColor(0xFCD720)));
-                    tooltip.add(Component.translatable("recipe.forgefrontier.energy_amount").append(Integer.toString((int) (recipe.getRequiredEnergy() * feMult))).withStyle(ChatFormatting.BLUE));
+                    tooltip.add(Component.translatable("recipe.forgefrontiercore.fe_use_key").withStyle(Style.EMPTY.withColor(0xFCD720)));
+                    tooltip.add(Component.translatable("recipe.forgefrontiercore.energy_amount").append(Integer.toString( recipe.getRequiredEnergy() )).withStyle(ChatFormatting.BLUE));
                 })
                 .addItemStack(ModItems.FORGE_ENERGY.asStack());
 
@@ -165,8 +164,8 @@ public class EnergeticMixingCategory extends BasinCategory {
             builder
                     .addSlot(RecipeIngredientRole.RENDER_ONLY, 153, 106)
                     .addRichTooltipCallback((slot, tooltip) -> {
-                        tooltip.add(Component.translatable("recipe.forgefrontier.ae_use_key").withStyle(Style.EMPTY.withColor(0xC295F0)));
-                        tooltip.add(Component.translatable("recipe.forgefrontier.energy_amount").append(Integer.toString(recipe.getRequiredEnergy())).withStyle(ChatFormatting.BLUE));
+                        tooltip.add(Component.translatable("recipe.forgefrontiercore.ae_use_key").withStyle(Style.EMPTY.withColor(0xC295F0)));
+                        tooltip.add(Component.translatable("recipe.forgefrontiercore.energy_amount").append("20 AE/t").withStyle(ChatFormatting.BLUE));
                     })
                     .addItemStack(ModItems.APPLIED_ENERGISTICS_ENERGY.asStack());
         }

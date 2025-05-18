@@ -126,9 +126,9 @@ versionRange="[1.20.1+5.11.1,)"
 ordering="AFTER"
 side="BOTH"
 
-[[dependencies."${mod_id}"]]
-modId = "balancedflight"
-mandatory = true
-versionRange="[1.20.1_v2.3.0,)"
-ordering = "NONE"
-side = "BOTH"
+#[[dependencies."${mod_id}"]]
+#modId = "balancedflight"
+#mandatory = true
+#versionRange="[1.20.1_v2.3.0,)"
+#ordering = "NONE"
+#side = "BOTH"

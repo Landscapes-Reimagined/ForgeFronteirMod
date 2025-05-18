@@ -59,19 +59,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity implements IHaveGoggleInformation, IEnergyStorage, IExternalPowerSink, IGridConnectedBlockEntity {
+public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity implements IHaveGoggleInformation, IEnergyStorage, IGridConnectedBlockEntity {
 
     //FE power buffer
     protected final MachineInternalEnergyBuffer energyBuffer;
     protected LazyOptional<IEnergyStorage> lazyBuffer;
 
-    //AE2 power buffer
-    protected final AE2InternalEnergyBuffer internalAEBuffer;
 
     //AE2 grid stuff
     private final IManagedGridNode mainNode = createMainNode()
             .setVisualRepresentation(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.asStack())
-            .addService(IAEPowerStorage.class, this)
             .setIdlePowerUsage(20)
             .setInWorldNode(true)
             .setTagName("proxy");
@@ -96,7 +93,6 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         super(type, pos, state);
         this.energyBuffer = new MachineInternalEnergyBuffer(Config.ENERGETIC_BLAZE_FE_CAPACITY.get(), Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get());
         this.lazyBuffer = LazyOptional.of(() -> this.energyBuffer);
-        this.internalAEBuffer = new AE2InternalEnergyBuffer(Config.ENERGETIC_BLAZE_AE_CAPACITY.get(), Config.ENERGETIC_BLAZE_MAX_AE_RECEIVE.get(), 0);
         this.tankInventory = this.createInventory();
         this.fluidCapability = LazyOptional.of(() -> this.tankInventory);
 
@@ -205,24 +201,24 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         //Fill internal buffer from our AE network
         var grid = this.getMainNode().getGrid();
 
-        if(grid != null && !this.internalAEBuffer.isFull()) {
-            double powerTest = grid.getEnergyService().extractAEPower(this.internalAEBuffer.getMaxInsert(), Actionable.SIMULATE, PowerMultiplier.ONE);
-
-
-            double remainder = this.internalAEBuffer.injectAEPower(powerTest, Actionable.SIMULATE);
-
-            if(remainder >= 0){
-
-                double realPower = grid.getEnergyService().extractAEPower(powerTest - remainder, Actionable.MODULATE, PowerMultiplier.ONE);
-
-                double realLeftover = this.internalAEBuffer.injectAEPower(realPower, Actionable.MODULATE);
-
-                grid.getEnergyService().injectPower(realLeftover, Actionable.MODULATE);
-
-            }
-
-
-        }
+//        if(grid != null && grid.getEnergyService().isNetworkPowered()) {
+//            double powerTest = grid.getEnergyService().extractAEPower(this.internalAEBuffer.getMaxInsert(), Actionable.SIMULATE, PowerMultiplier.ONE);
+//
+//
+//            double remainder = this.internalAEBuffer.injectAEPower(powerTest, Actionable.SIMULATE);
+//
+//            if(remainder >= 0){
+//
+//                double realPower = grid.getEnergyService().extractAEPower(powerTest - remainder, Actionable.MODULATE, PowerMultiplier.ONE);
+//
+//                double realLeftover = this.internalAEBuffer.injectAEPower(realPower, Actionable.MODULATE);
+//
+//                grid.getEnergyService().injectPower(realLeftover, Actionable.MODULATE);
+//
+//            }
+//
+//
+//        }
 
 
 
@@ -232,7 +228,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         EnergeticBlazeBurner.EnergyLevel oldEnergyLevel = level.getBlockState(this.worldPosition).getValue(EnergeticBlazeBurner.ENERGY_LEVEL);
 
 
-        if(this.internalAEBuffer.getAECurrentPower() > 0 && this.energyBuffer.energy >= EnergeticBlazeBurner.EnergyLevel.INFUSE.getMinFE()){
+        if((grid != null && grid.getEnergyService().isNetworkPowered()) && this.energyBuffer.energy >= EnergeticBlazeBurner.EnergyLevel.INFUSE.getMinFE()){
 
             if(oldEnergyLevel != EnergeticBlazeBurner.EnergyLevel.INFUSE) {
                 stateChangedUp = stateChanged = true;
@@ -252,7 +248,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
                 this.level.setBlock(this.worldPosition, this.level.getBlockState(this.getBlockPos()).setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE), 0b10);
             }
 
-        }else if(this.internalAEBuffer.getAECurrentPower() <= 0 && this.energyBuffer.energy > EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE.getMinFE()){
+        }else if((grid == null || !grid.getEnergyService().isNetworkPowered()) && this.energyBuffer.energy > EnergeticBlazeBurner.EnergyLevel.CRYSTALLIZE.getMinFE()){
 
             if(oldEnergyLevel != EnergeticBlazeBurner.EnergyLevel.SLEEPY) {
                 stateChanged = true;
@@ -262,12 +258,12 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
 
                 this.level.setBlock(this.worldPosition, this.level.getBlockState(this.getBlockPos()).setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.SLEEPY), 0b10);
             }
-        }else if(this.internalAEBuffer.getAECurrentPower() <= 0 && this.energyBuffer.getEnergyStored() == 0){
+        }else if((grid == null || !grid.getEnergyService().isNetworkPowered()) && this.energyBuffer.getEnergyStored() == 0){
 
             if(oldEnergyLevel != EnergeticBlazeBurner.EnergyLevel.SLEEPING) {
 
-
                 this.level.setBlock(this.worldPosition, this.level.getBlockState(this.getBlockPos()).setValue(EnergeticBlazeBurner.ENERGY_LEVEL, EnergeticBlazeBurner.EnergyLevel.SLEEPING), 0b10);
+
             }
         }
 
@@ -285,13 +281,6 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             this.energyBuffer.setCapacity(Config.ENERGETIC_BLAZE_FE_CAPACITY.get());
             this.energyBuffer.setInsertExtract(Config.ENERGETIC_BLAZE_MAX_FE_RECEIVE.get(), Config.ENERGETIC_BLAZE_MAX_FE_EXTRACT.get());
             this.energyBuffer.cullEnergy();
-
-        }
-
-        if(getHeatLevel().isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING)){
-            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get() * 1.5);
-        }else{
-            this.internalAEBuffer.setEnergyCapacity(Config.ENERGETIC_BLAZE_AE_CAPACITY.get());
 
         }
 
@@ -332,9 +321,9 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
 
             double FEMultiplier = 1;
 
-            if(energyCondition.testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
-                FEMultiplier = 0.5;
-            }
+//            if(energyCondition.testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
+//                FEMultiplier = 0.5;
+//            }
 
             int FEperTick = (int) Math.ceil(energyPerTick * FEMultiplier);
 
@@ -359,26 +348,26 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
                 this.energyBuffer.internalExtractEnergy(FEperTick, false, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
             }
 
-            double usedAEEnergy = 0;
-            if(energyCondition.testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
-                usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.SIMULATE, PowerMultiplier.ONE);
-
-                if(usedAEEnergy > 0 && usedAEEnergy < energyPerTick && energyLeft == this.currentRecipe.getRequiredEnergy()){
-                    int countingProcessingTicks = mixer.processingTicks <= 0 ? 1 : mixer.processingTicks;
-
-                    double tickScale = getExtractionsToExtract(usedAEEnergy, totalEnergyPerTick, countingProcessingTicks);
-
-                    mixer.processingTicks = Mth.ceil(countingProcessingTicks * tickScale);
-
-                    energyPerTick = energyLeft / mixer.processingTicks;
-
-                    usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
-
-
-                }else{
-                    this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
-                }
-            }
+//            double usedAEEnergy = 0;
+//            if(energyCondition.testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
+//                usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.SIMULATE, PowerMultiplier.ONE);
+//
+//                if(usedAEEnergy > 0 && usedAEEnergy < energyPerTick && energyLeft == this.currentRecipe.getRequiredEnergy()){
+//                    int countingProcessingTicks = mixer.processingTicks <= 0 ? 1 : mixer.processingTicks;
+//
+//                    double tickScale = getExtractionsToExtract(usedAEEnergy, totalEnergyPerTick, countingProcessingTicks);
+//
+//                    mixer.processingTicks = Mth.ceil(countingProcessingTicks * tickScale);
+//
+//                    energyPerTick = energyLeft / mixer.processingTicks;
+//
+//                    usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
+//
+//
+//                }else{
+//                    this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
+//                }
+//            }
 
             this.usedPower += energyPerTick;
 
@@ -402,102 +391,102 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     }
 
 
-    private void doProcessingAndEnergy(double totalRecipeEnergy, int totalProcessTime, boolean keepDoingRecipe, MechanicalMixerBlockEntity mixer) {
-
-
-        if(totalRecipeEnergy == 0){
-            this.resetRecipe();
-            return;
-        }
-
-
-
-        double realRecipeSpeed = Mth.clamp(Mth.log2((int) (512 / Math.abs(mixer.getSpeed()))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512); //Math.max(totalProcessTime / Math.abs(mixer.getSpeed() * 20), 1);
-        double energyPerTick = totalRecipeEnergy / realRecipeSpeed;
-
-
-
-
-        double FEMultiplier = 1;
-
-        assert currentRecipe != null;
-        if(currentRecipe.getRequiredEnergyLevel().testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
-            FEMultiplier = 0.5;
-        }
-
-
-        int FEperTick = (int) (energyPerTick * FEMultiplier) ;
-
-
-
-        int usedEnergy = this.energyBuffer.internalExtractEnergy( FEperTick, true, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
-
-
-
-        if(usedEnergy < FEperTick){
+//    private void doProcessingAndEnergy(double totalRecipeEnergy, int totalProcessTime, boolean keepDoingRecipe, MechanicalMixerBlockEntity mixer) {
+//
+//
+//        if(totalRecipeEnergy == 0){
+//            this.resetRecipe();
+//            return;
+//        }
+//
+//
+//
+//        double realRecipeSpeed = Mth.clamp(Mth.log2((int) (512 / Math.abs(mixer.getSpeed()))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512); //Math.max(totalProcessTime / Math.abs(mixer.getSpeed() * 20), 1);
+//        double energyPerTick = totalRecipeEnergy / realRecipeSpeed;
+//
+//
+//
+//
+//        double FEMultiplier = 1;
+//
+//        assert currentRecipe != null;
+//        if(currentRecipe.getRequiredEnergyLevel().testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
+//            FEMultiplier = 0.5;
+//        }
+//
+//
+//        int FEperTick = (int) (energyPerTick * FEMultiplier) ;
+//
+//
+//
+//        int usedEnergy = this.energyBuffer.internalExtractEnergy( FEperTick, true, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
+//
+//
+//
+//        if(usedEnergy < FEperTick){
+////            keepDoingRecipe = false;
+//            //repeat
+////            mixer.processingTicks++;
+////            this.doProcessingAndEnergy(totalRecipeEnergy, mixer.processingTicks, keepDoingRecipe, mixer);
+//
+//
+//            int nonZeroProcessingTicks = (mixer.processingTicks <= 0 ? 1 : mixer.processingTicks);
+//
+//            double ticksToExtractFE = this.energyBuffer.getExtractionsToExtract(energyPerTick * FEMultiplier, nonZeroProcessingTicks);
+//
+//            mixer.processingTicks = Mth.ceil(ticksToExtractFE * nonZeroProcessingTicks);
+//
+//            realRecipeSpeed = Mth.clamp((Mth.log2((int) (512 / Math.abs(mixer.getSpeed())))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512);
+//            energyPerTick = totalRecipeEnergy / realRecipeSpeed;
+//
+//            FEperTick = (int) (energyPerTick);
+//
+//            usedEnergy = this.energyBuffer.internalExtractEnergy( (int) (FEperTick * FEMultiplier), false, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
+//
+//
+//
+//        }else if(usedEnergy < 0) {
 //            keepDoingRecipe = false;
-            //repeat
-//            mixer.processingTicks++;
-//            this.doProcessingAndEnergy(totalRecipeEnergy, mixer.processingTicks, keepDoingRecipe, mixer);
-
-
-            int nonZeroProcessingTicks = (mixer.processingTicks <= 0 ? 1 : mixer.processingTicks);
-
-            double ticksToExtractFE = this.energyBuffer.getExtractionsToExtract(energyPerTick * FEMultiplier, nonZeroProcessingTicks);
-
-            mixer.processingTicks = Mth.ceil(ticksToExtractFE * nonZeroProcessingTicks);
-
-            realRecipeSpeed = Mth.clamp((Mth.log2((int) (512 / Math.abs(mixer.getSpeed())))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512);
-            energyPerTick = totalRecipeEnergy / realRecipeSpeed;
-
-            FEperTick = (int) (energyPerTick);
-
-            usedEnergy = this.energyBuffer.internalExtractEnergy( (int) (FEperTick * FEMultiplier), false, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
-
-
-
-        }else if(usedEnergy < 0) {
-            keepDoingRecipe = false;
-        }else{
-            this.energyBuffer.internalExtractEnergy(FEperTick, false, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
-        }
-
-        double usedAEEnergy = Double.MIN_VALUE;
-        if(this.currentRecipe.getRequiredEnergyLevel().testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
-
-            usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.SIMULATE, PowerMultiplier.ONE);
-
-            if(usedAEEnergy >= 0 && usedAEEnergy < energyPerTick){
-                int nonZeroProcessingTicks = (mixer.processingTicks >= 0 ? 1 : mixer.processingTicks);
-
-                double ticksToExtractAE = getExtractionsToExtract(usedAEEnergy, energyPerTick, nonZeroProcessingTicks);
-
-                mixer.processingTicks = Mth.ceil(ticksToExtractAE * nonZeroProcessingTicks);
-
-                realRecipeSpeed = Mth.clamp((Mth.log2((int) (512 / Math.abs(mixer.getSpeed())))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512);
-                energyPerTick = totalRecipeEnergy / realRecipeSpeed;
-
-                usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
-
-
-
-            }else if(usedAEEnergy < 0){
-                keepDoingRecipe = false;
-            }else{
-                this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
-            }
-
-
-        }
-
-        this.usedPower += energyPerTick;
-
-
-        if(!keepDoingRecipe){
-            mixer.running = false;
-            this.resetRecipe();
-        }
-    }
+//        }else{
+//            this.energyBuffer.internalExtractEnergy(FEperTick, false, MachineInternalEnergyBuffer.ExtractionSource.INTERNAL);
+//        }
+//
+//        double usedAEEnergy = Double.MIN_VALUE;
+//        if(this.currentRecipe.getRequiredEnergyLevel().testEnergeticBlazeBurner(EnergeticBlazeBurner.EnergyLevel.INFUSE)){
+//
+//            usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.SIMULATE, PowerMultiplier.ONE);
+//
+//            if(usedAEEnergy >= 0 && usedAEEnergy < energyPerTick){
+//                int nonZeroProcessingTicks = (mixer.processingTicks >= 0 ? 1 : mixer.processingTicks);
+//
+//                double ticksToExtractAE = getExtractionsToExtract(usedAEEnergy, energyPerTick, nonZeroProcessingTicks);
+//
+//                mixer.processingTicks = Mth.ceil(ticksToExtractAE * nonZeroProcessingTicks);
+//
+//                realRecipeSpeed = Mth.clamp((Mth.log2((int) (512 / Math.abs(mixer.getSpeed())))) * Mth.ceil(mixer.processingTicks * 15) + 1, 1, 512);
+//                energyPerTick = totalRecipeEnergy / realRecipeSpeed;
+//
+//                usedAEEnergy = this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
+//
+//
+//
+//            }else if(usedAEEnergy < 0){
+//                keepDoingRecipe = false;
+//            }else{
+//                this.internalAEBuffer.usePower(energyPerTick, Actionable.MODULATE, PowerMultiplier.ONE);
+//            }
+//
+//
+//        }
+//
+//        this.usedPower += energyPerTick;
+//
+//
+//        if(!keepDoingRecipe){
+//            mixer.running = false;
+//            this.resetRecipe();
+//        }
+//    }
 
     private static double getExtractionsToExtract(double extract, double amount, int extractionsOtherwise){
         double extracted = Math.min(extract, amount);
@@ -587,7 +576,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.put("EnergyBuffer", this.energyBuffer.writeToTag());
-        compound.put("AEEnergyBuffer", this.internalAEBuffer.writeToTag());
+//        compound.put("AEEnergyBuffer", this.internalAEBuffer.writeToTag());
         this.mainNode.saveToNBT(compound);
         compound.put("TankContent", this.tankInventory.writeToNBT(new CompoundTag()));
 
@@ -601,7 +590,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         CompoundTag AEBufferTag = compound.getCompound("AEEnergyBuffer");
 
         this.energyBuffer.readTag(energyBufferTag);
-        this.internalAEBuffer.readTag(AEBufferTag);
+//        this.internalAEBuffer.readTag(AEBufferTag);
         this.mainNode.loadFromNBT(compound);
 
         this.tankInventory.readFromNBT(compound.getCompound("TankContent"));
@@ -611,38 +600,34 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         LazyOptional<IFluidHandlerItem> cap = itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (!cap.isPresent()) {
             return false;
-        } else {
-            IFluidHandlerItem handler = cap.orElse(null);
-            if (handler.getFluidInTank(0).isEmpty()) {
-                return false;
-            } else {
-                FluidStack stack = handler.getFluidInTank(0);
-                Optional<LiquidBurningRecipe> recipe = this.find(stack, this.level);
-                if (!recipe.isPresent()) {
-                    return false;
-                } else {
-                    LazyOptional<IFluidHandler> tecap = this.getCapability(ForgeCapabilities.FLUID_HANDLER);
-                    if (!tecap.isPresent()) {
-                        return false;
-                    } else {
-                        IFluidHandler tehandler = tecap.orElse(null);
-                        if (tehandler.getTankCapacity(0) - tehandler.getFluidInTank(0).getAmount() < 1000) {
-                            return false;
-                        } else {
-                            if (!simulate) {
-                                tehandler.fill(new FluidStack(handler.getFluidInTank(0).getFluid(), 1000), IFluidHandler.FluidAction.EXECUTE);
-                            }
-
-                            if (!simulate) {
-                                this.level.playSound(null, this.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.125F + this.level.random.nextFloat() * 0.125F, 0.75F - this.level.random.nextFloat() * 0.25F);
-                            }
-
-                            return true;
-                        }
-                    }
-                }
-            }
         }
+        IFluidHandlerItem handler = cap.orElse(null);
+        if (handler.getFluidInTank(0).isEmpty()) {
+            return false;
+        }
+        FluidStack stack = handler.getFluidInTank(0);
+        Optional<LiquidBurningRecipe> recipe = this.find(stack, this.level);
+        if (!recipe.isPresent()) {
+            return false;
+        }
+        LazyOptional<IFluidHandler> tecap = this.getCapability(ForgeCapabilities.FLUID_HANDLER);
+        if (!tecap.isPresent()) {
+            return false;
+        }
+        IFluidHandler tehandler = tecap.orElse(null);
+        if (tehandler.getTankCapacity(0) - tehandler.getFluidInTank(0).getAmount() < 1000) {
+            return false;
+        }
+        if (!simulate) {
+            tehandler.fill(new FluidStack(handler.getFluidInTank(0).getFluid(), 1000), IFluidHandler.FluidAction.EXECUTE);
+        }
+
+        if (!simulate) {
+            this.level.playSound(null, this.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.125F + this.level.random.nextFloat() * 0.125F, 0.75F - this.level.random.nextFloat() * 0.25F);
+        }
+
+        return true;
+
     }
 
     @Override
@@ -710,9 +695,9 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         this.energyBuffer.energy = FE;
     }
 
-    public void setAE(double AE){
-        this.internalAEBuffer.AEPower = AE;
-    }
+//    public void setAE(double AE){
+//        this.internalAEBuffer.AEPower = AE;
+//    }
 
     @Override
     public int getEnergyStored() {
@@ -738,50 +723,50 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         return EnergeticBlazeBurner.getEnergyLevelOf(this.getBlockState());
     }
 
-    @Override
-    public double injectExternalPower(PowerUnits externalUnit, double amount, Actionable mode) {
-        return PowerUnits.AE.convertTo(externalUnit, this.internalAEBuffer.injectAEPower(externalUnit.convertTo(PowerUnits.AE, amount), mode));
-    }
-
-    @Override
-    public double getExternalPowerDemand(PowerUnits externalUnit, double maxPowerRequired) {
-        return PowerUnits.AE.convertTo(externalUnit,
-                Math.max(0.0, this.getCapacityLeft()));
-    }
-
-    protected double getCapacityLeft() {
-        return this.internalAEBuffer.getAEMaxPower() - this.internalAEBuffer.getAECurrentPower();
-    }
-
-    @Override
-    public double injectAEPower(double amt, Actionable mode) {
-        return this.internalAEBuffer.injectAEPower(amt, mode);
-    }
-
-    @Override
-    public double getAEMaxPower() {
-        return this.internalAEBuffer.getAEMaxPower();
-    }
-
-    @Override
-    public double getAECurrentPower() {
-        return this.internalAEBuffer.getAECurrentPower();
-    }
-
-    @Override
-    public boolean isAEPublicPowerStorage() {
-        return this.internalAEBuffer.isAEPublicPowerStorage();
-    }
-
-    @Override
-    public AccessRestriction getPowerFlow() {
-        return this.internalAEBuffer.getPowerFlow();
-    }
-
-    @Override
-    public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
-        return this.internalAEBuffer.extractAEPower(amt, mode, usePowerMultiplier);
-    }
+//    @Override
+//    public double injectExternalPower(PowerUnits externalUnit, double amount, Actionable mode) {
+//        return PowerUnits.AE.convertTo(externalUnit, this.internalAEBuffer.injectAEPower(externalUnit.convertTo(PowerUnits.AE, amount), mode));
+//    }
+//
+//    @Override
+//    public double getExternalPowerDemand(PowerUnits externalUnit, double maxPowerRequired) {
+//        return PowerUnits.AE.convertTo(externalUnit,
+//                Math.max(0.0, this.getCapacityLeft()));
+//    }
+//
+//    protected double getCapacityLeft() {
+//        return this.internalAEBuffer.getAEMaxPower() - this.internalAEBuffer.getAECurrentPower();
+//    }
+//
+//    @Override
+//    public double injectAEPower(double amt, Actionable mode) {
+//        return this.internalAEBuffer.injectAEPower(amt, mode);
+//    }
+//
+//    @Override
+//    public double getAEMaxPower() {
+//        return this.internalAEBuffer.getAEMaxPower();
+//    }
+//
+//    @Override
+//    public double getAECurrentPower() {
+//        return this.internalAEBuffer.getAECurrentPower();
+//    }
+//
+//    @Override
+//    public boolean isAEPublicPowerStorage() {
+//        return this.internalAEBuffer.isAEPublicPowerStorage();
+//    }
+//
+//    @Override
+//    public AccessRestriction getPowerFlow() {
+//        return this.internalAEBuffer.getPowerFlow();
+//    }
+//
+//    @Override
+//    public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
+//        return this.internalAEBuffer.extractAEPower(amt, mode, usePowerMultiplier);
+//    }
 
     @Override
     public IManagedGridNode getMainNode() {

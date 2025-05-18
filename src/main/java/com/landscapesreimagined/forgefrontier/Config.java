@@ -52,9 +52,9 @@ public class Config
     static{
         BUILDER.comment("Machine Settings").push(CATEGORY_MACHINES);
 
-        DEFAULT_MACHINE_INTERNAL_ENERGY_CAPACITY = BUILDER.comment("Default internal requiredEnergy capacity of Forge Frontier machines").defineInRange("default_machine_internal_energy_capacity", 500000, 0, Integer.MAX_VALUE);
-        DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT = BUILDER.comment("Default internal requiredEnergy max insert rate of Forge Frontier machines").defineInRange("default_machine_energy_insert_rate", 4096, 0, Integer.MAX_VALUE);
-        DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT = BUILDER.comment("Default internal requiredEnergy max extract rate of Forge Frontier machines").comment("NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!").defineInRange("default_machine_internal_extract_rate", 4096, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_CAPACITY = BUILDER.comment("Default internal requiredEnergy capacity of Forge Frontier Core machines").defineInRange("default_machine_internal_energy_capacity", 500000, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_INSERT = BUILDER.comment("Default internal requiredEnergy max insert rate of Forge Frontier Core machines").defineInRange("default_machine_energy_insert_rate", 4096, 0, Integer.MAX_VALUE);
+        DEFAULT_MACHINE_INTERNAL_ENERGY_EXTRACT = BUILDER.comment("Default internal requiredEnergy max extract rate of Forge Frontier Core machines").comment("NOTE: YOU CANNOT EXTRACT ENERGY FROM MOST MACHINES!!!").defineInRange("default_machine_internal_extract_rate", 4096, 0, Integer.MAX_VALUE);
 
         BUILDER.comment("");
 

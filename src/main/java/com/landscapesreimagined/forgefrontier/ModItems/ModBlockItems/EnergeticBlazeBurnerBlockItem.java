@@ -93,7 +93,7 @@ public class EnergeticBlazeBurnerBlockItem extends BlockItem {
 
     @Override
     public Component getName(ItemStack pStack) {
-        return this.capturedBlaze ? Component.translatable("block.forgefrontier.energetic_blaze_burner") : Component.translatable("block.forgefrontier.empty_energetic_blaze_burner");
+        return this.capturedBlaze ? Component.translatable("block.forgefrontiercore.energetic_blaze_burner") : Component.translatable("block.forgefrontiercore.empty_energetic_blaze_burner");
     }
 
     //    @Override

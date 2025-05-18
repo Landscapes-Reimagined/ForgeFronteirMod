@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 public class ForgeFrontier {
 
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "forgefrontier";
+    public static final String MODID = "forgefrontiercore";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     private static final DeferredRegister<CreativeModeTab> TAB_DEFERRED_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -37,7 +37,7 @@ public class ForgeFrontier {
     public static final RegistryObject<CreativeModeTab> MOD_TAB =
             TAB_DEFERRED_REGISTER.register("forge_frontier_tab",
                     () -> CreativeModeTab.builder()
-                            .title(Component.translatable("itemGroup.forgefrontier.forge_frontier_tab"))
+                            .title(Component.translatable("itemGroup.forgefrontiercore.forge_frontier_tab"))
                             .icon(() -> ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK.asItem().getDefaultInstance())
                             .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.EMPTY_BLAZE_BURNER);

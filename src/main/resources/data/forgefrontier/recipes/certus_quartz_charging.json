@@ -1,5 +1,5 @@
 {
-  "type": "forgefrontier:energetic_mixing",
+  "type": "forgefrontiercore:energetic_mixing",
   "heatRequirement": "heated",
   "requiredEnergy": 204800,
   "requiredEnergyLevel": "crystallize",

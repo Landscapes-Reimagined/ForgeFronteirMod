@@ -15,11 +15,8 @@ public enum EnergyCondition {
 
     public boolean testEnergeticBlazeBurner(EnergyLevel level){
         return switch (this) {
-            case INFUSE -> level == EnergyLevel.INFUSE;
-            case CRYSTALLIZE ->
-                    level != EnergyLevel.NONE &&
-                    level != EnergyLevel.INFUSE &&
-                    level != EnergyLevel.SLEEPING;
+            case INFUSE -> level.isAtLeast(EnergyLevel.INFUSE);
+            case CRYSTALLIZE -> level.isAtLeast(EnergyLevel.SLEEPY);
             case NONE -> true;
         };
 

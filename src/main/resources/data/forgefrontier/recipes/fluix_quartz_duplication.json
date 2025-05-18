@@ -1,5 +1,5 @@
 {
-  "type": "forgefrontier:energetic_mixing",
+  "type": "forgefrontiercore:energetic_mixing",
   "heatRequirement": "superheated",
   "requiredEnergy": 750000,
   "requiredEnergyLevel": "infuse",
