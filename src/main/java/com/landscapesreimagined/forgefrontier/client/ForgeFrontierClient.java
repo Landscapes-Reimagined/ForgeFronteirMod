@@ -4,9 +4,10 @@ import appeng.items.tools.fluix.FluixSpadeItem;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.landscapesreimagined.forgefrontier.client.renderer.ForgeFrontierSpriteShifts;
 import com.landscapesreimagined.forgefrontier.client.renderer.models.ForgeFronteirPartialModels;
+import com.landscapesreimagined.forgefrontier.ponder.ForgeFrontierPonderPlugin;
 import com.landscapesreimagined.forgefrontier.ponder.ForgeFrontierPonders;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -22,9 +23,7 @@ public class ForgeFrontierClient {
 
         ForgeFronteirPartialModels.register();
 
-        PonderRegistry.TAGS.forTag(AllPonderTags.RECENTLY_UPDATED)
-                .add(ModBlocks.ENERGETIC_BLAZE_BURNER_BLOCK);
-        ForgeFrontierPonders.register();
+        PonderIndex.addPlugin(new ForgeFrontierPonderPlugin());
 
 
     }

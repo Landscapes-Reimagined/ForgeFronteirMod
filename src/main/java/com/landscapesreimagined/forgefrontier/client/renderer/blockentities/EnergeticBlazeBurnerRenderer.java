@@ -30,8 +30,6 @@
 package com.landscapesreimagined.forgefrontier.client.renderer.blockentities;
 
 import com.ibm.icu.text.MessagePattern;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
 import com.landscapesreimagined.forgefrontier.client.renderer.ForgeFrontierSpriteShifts;
@@ -42,13 +40,15 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -156,7 +156,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             uScroll = uScroll - Math.floor(uScroll);
             uScroll = uScroll * spriteWidth / 2;
 
-            SuperByteBuffer flameBuffer = CachedBufferer.partial(ForgeFronteirPartialModels.BLAZE_BURNER_FLAME, blockState);
+            SuperByteBuffer flameBuffer = CachedBuffers.partial(ForgeFronteirPartialModels.BLAZE_BURNER_FLAME, blockState);
             if (modelTransform != null)
                 flameBuffer.transform(modelTransform);
             flameBuffer.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll);
@@ -168,7 +168,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
 
 
 
-        SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
+        SuperByteBuffer blazeBuffer = CachedBuffers.partial(blazeModel, blockState);
         if (modelTransform != null)
             blazeBuffer.transform(modelTransform);
         blazeBuffer.translate(0, headY, 0);
@@ -176,7 +176,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
 
         if(partialBlazeModelNeedsUnderLayer(blazeModel)){
             PartialModel underInfuseModel = blockAbove ? ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_ON : ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ON;
-            SuperByteBuffer underBlazeBuffer = CachedBufferer.partial(underInfuseModel, blockState);
+            SuperByteBuffer underBlazeBuffer = CachedBuffers.partial(underInfuseModel, blockState);
             if (modelTransform != null)
                 underBlazeBuffer.transform(modelTransform);
             underBlazeBuffer.translate(0, headY, 0);
@@ -191,7 +191,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             PartialModel gogglesModel = isSmallBlaze(blazeModel)
                     ? ForgeFronteirPartialModels.BLAZE_GOGGLES_SMALL : ForgeFronteirPartialModels.BLAZE_GOGGLES;
 
-            SuperByteBuffer gogglesBuffer = CachedBufferer.partial(gogglesModel, blockState);
+            SuperByteBuffer gogglesBuffer = CachedBuffers.partial(gogglesModel, blockState);
             if (modelTransform != null)
                 gogglesBuffer.transform(modelTransform);
             gogglesBuffer.translate(0, headY + 8 / 16f, 0);
@@ -199,20 +199,20 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
         }
 
         if (drawHat) {
-            SuperByteBuffer hatBuffer = CachedBufferer.partial(AllPartialModels.TRAIN_HAT, blockState);
+            SuperByteBuffer hatBuffer = CachedBuffers.partial(AllPartialModels.TRAIN_HAT, blockState);
             if (modelTransform != null)
                 hatBuffer.transform(modelTransform);
             hatBuffer.translate(0, headY, 0);
             if (isSmallBlaze(blazeModel)) {
                 hatBuffer.translateY(0.5f)
-                        .centre()
+                        .center()
                         .scale(0.75f)
-                        .unCentre();
+                        .uncenter();
             } else {
                 hatBuffer.translateY(0.75f);
             }
             hatBuffer
-                    .rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
+                    .rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
                     .translate(0.5f, 0, 0.5f)
                     .light(LightTexture.FULL_BRIGHT)
                     .renderInto(ms, solid);
@@ -224,14 +224,14 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             PartialModel rodsModel2 = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? ForgeFronteirPartialModels.BLAZE_BURNER_SUPER_RODS_2
                     : ForgeFronteirPartialModels.BLAZE_BURNER_RODS_2;
 
-            SuperByteBuffer rodsBuffer = CachedBufferer.partial(rodsModel, blockState);
+            SuperByteBuffer rodsBuffer = CachedBuffers.partial(rodsModel, blockState);
             if (modelTransform != null)
                 rodsBuffer.transform(modelTransform);
             rodsBuffer.translate(0, offset1 + animation + .125f, 0)
                     .light(LightTexture.FULL_BRIGHT)
                     .renderInto(ms, solid);
 
-            SuperByteBuffer rodsBuffer2 = CachedBufferer.partial(rodsModel2, blockState);
+            SuperByteBuffer rodsBuffer2 = CachedBuffers.partial(rodsModel2, blockState);
             if (modelTransform != null)
                 rodsBuffer2.transform(modelTransform);
             rodsBuffer2.translate(0, offset2 + animation - 3 / 16f, 0)
@@ -291,7 +291,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
     }
 
     private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
-        buffer.rotateCentered(Direction.UP, horizontalAngle)
+        buffer.rotateCentered(horizontalAngle, Direction.UP)
                 .light(LightTexture.FULL_BRIGHT)
                 .renderInto(ms, vc);
     }

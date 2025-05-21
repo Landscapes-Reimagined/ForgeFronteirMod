@@ -156,8 +156,4 @@ public class EnergeticMixingRecipe extends WorldMatchingMixingRecipe {
         }
     }
 
-    @Override
-    public boolean matches(SmartInventory inv, @NotNull Level worldIn) {
-        return false;
-    }
 }

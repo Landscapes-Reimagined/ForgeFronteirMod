@@ -147,11 +147,10 @@ repositories {
         dir 'libs'
     }
 
-    //hrmmmmmmmMMMMMMMMMMMMMMMMMMMM
-    maven {
-        name = 'tterrag maven'
-        url = 'https://maven.tterrag.com/'
-    }
+    maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
+    maven { url = "https://maven.tterrag.com" } // Registrate
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // ForgeConfigAPIPort
+
 
 //    maven { // Registrate
 //        url "https://maven.tterrag.com/"
@@ -243,6 +242,9 @@ dependencies {
     //Create: Dreams and Desires
     implementation fg.deobf("locallibs:Create-Dreams-n-Desires-${minecraft_version}:${createdd_version}")
 
+    //Create: Dreams and Desires to Create 6
+    implementation fg.deobf("locallibs:ddtocreate6:${ddtocreate6_version}");
+
 
     //FTB Quests
     implementation fg.deobf("curse.maven:ftb-quests-forge-289412:${ftb_quests_file}")
@@ -258,11 +260,19 @@ dependencies {
 
 
     //Create
-    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
-    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    implementation(fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false })
+    implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
+
+    //Flywheel
+    compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}"))
+    runtimeOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"))
+
+   //Mixin Extras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
 
     //Registrate
-    implementation fg.deobf("com.tterrag.registrate:Registrate:MC${trunc_mc_version}-${registrate_version}")
+    implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))
 
     //Molten Vents
     implementation fg.deobf("locallibs:molten_vents-${minecraft_version}:${molten_vents_version}")
@@ -271,9 +281,6 @@ dependencies {
     //ArchitecturyAPI
     implementation fg.deobf("dev.architectury:architectury-forge:9.2.14")
 
-    //KubeJS
-//    implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
-//    implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
 
 
     //Moonlight Lib
@@ -327,8 +334,8 @@ dependencies {
     implementation fg.deobf("curse.maven:create-stuff-additions-466792:${sa_file}")
 
     //Create: New Age
-    compileOnly fg.deobf("curse.maven:create-new-age-905861:5080957")
-    runtimeOnly fg.deobf("curse.maven:create-new-age-905861:5080957")
+    compileOnly fg.deobf("curse.maven:create-new-age-905861:6482827")
+    runtimeOnly fg.deobf("curse.maven:create-new-age-905861:6482827")
     compileOnly fg.deobf("curse.maven:botarium-704113:5486070")
     runtimeOnly fg.deobf("curse.maven:botarium-704113:5486070")
 

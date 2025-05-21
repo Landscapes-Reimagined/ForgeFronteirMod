@@ -1,6 +1,5 @@
 package com.landscapesreimagined.forgefrontier;
 
-import com.jozufozu.flywheel.api.instance.TickableInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -2,37 +2,24 @@ package com.landscapesreimagined.forgefrontier.compat.jei;
 
 import com.landscapesreimagined.forgefrontier.ForgeFrontier;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
-import com.landscapesreimagined.forgefrontier.recipies.EnergeticMixingRecipe;
 import com.landscapesreimagined.forgefrontier.recipies.ForgeFrontierRecipeTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.compat.jei.category.MixingCategory;
-import com.simibubi.create.content.equipment.blueprint.BlueprintScreen;
-import com.simibubi.create.content.fluids.potion.PotionFluid;
-import com.simibubi.create.content.logistics.filter.AbstractFilterScreen;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.simibubi.create.content.redstone.link.controller.LinkedControllerScreen;
-import com.simibubi.create.content.trains.schedule.ScheduleScreen;
-import com.simibubi.create.foundation.config.ConfigBase;
-import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
-import de.maxhenkel.pipez.recipes.ModRecipes;
 import mezz.jei.api.*;
-import mezz.jei.api.constants.RecipeTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.helpers.IPlatformFluidHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IIngredientManager;
+import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -245,7 +232,7 @@ public class ForgeFrontierPlugin implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(ForgeFrontier.asResource(name), recipeClass),
-                    Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
+                    CreateLang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             allCategories.add(category);
             return category;

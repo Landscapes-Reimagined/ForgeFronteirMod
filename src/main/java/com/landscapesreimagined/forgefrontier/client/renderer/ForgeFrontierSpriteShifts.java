@@ -1,9 +1,8 @@
 package com.landscapesreimagined.forgefrontier.client.renderer;
 
 import com.landscapesreimagined.forgefrontier.ForgeFrontier;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.render.SpriteShifter;
 
 public class ForgeFrontierSpriteShifts {
 

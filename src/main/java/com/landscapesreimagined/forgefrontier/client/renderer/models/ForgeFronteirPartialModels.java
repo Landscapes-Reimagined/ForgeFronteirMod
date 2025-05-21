@@ -1,7 +1,8 @@
 package com.landscapesreimagined.forgefrontier.client.renderer.models;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.landscapesreimagined.forgefrontier.ForgeFrontier;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 
 public class ForgeFronteirPartialModels {
@@ -37,7 +38,7 @@ public class ForgeFronteirPartialModels {
 
 
     private static PartialModel block(String path) {
-        return new PartialModel(ForgeFrontier.asResource("block/" + path));
+        return PartialModel.of(ForgeFrontier.asResource("block/" + path));
     }
 
     public static void register(){}

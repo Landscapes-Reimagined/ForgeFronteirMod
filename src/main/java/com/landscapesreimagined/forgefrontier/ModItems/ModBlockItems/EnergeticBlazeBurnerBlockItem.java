@@ -38,9 +38,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllEntityTags;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

@@ -15,6 +15,7 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import com.landscapesreimagined.forgefrontier.Config;
 import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlocks;
+import com.landscapesreimagined.forgefrontier.mixin.Create.BlazeBunerBlockEntityAccessor;
 import com.landscapesreimagined.forgefrontier.recipies.EnergeticMixingRecipe;
 import com.landscapesreimagined.forgefrontier.util.AE2InternalEnergyBuffer;
 import com.landscapesreimagined.forgefrontier.util.MachineInternalEnergyBuffer;
@@ -23,13 +24,17 @@ import com.mrh0.createaddition.index.CARecipes;
 import com.mrh0.createaddition.network.ObservePacket;
 import com.mrh0.createaddition.recipe.FluidRecipeWrapper;
 import com.mrh0.createaddition.recipe.liquid_burning.LiquidBurningRecipe;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.math.AngleHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +50,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -187,6 +194,7 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             //play a sound?
             //Do rendering stuff?
             //idk
+            tickAnimation();
 
             return;
         }
@@ -384,6 +392,41 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
         }
 
     }
+
+    @OnlyIn(Dist.CLIENT)
+    void tickAnimation() {
+        boolean active = getHeatLevelFromBlock().isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) && isValidBlockAbove();
+
+        if (!active) {
+            float target = 0;
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null && !player.isInvisible()) {
+                double x;
+                double z;
+                if (isVirtual()) {
+                    x = -4;
+                    z = -10;
+                } else {
+                    x = player.getX();
+                    z = player.getZ();
+                }
+                double dx = x - (getBlockPos().getX() + 0.5);
+                double dz = z - (getBlockPos().getZ() + 0.5);
+                target = AngleHelper.deg(-Mth.atan2(dz, dx)) - 90;
+            }
+            target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);
+            headAngle.chase(target, .25f, LerpedFloat.Chaser.exp(5));
+            headAngle.tickChaser();
+        } else {
+            headAngle.chase((AngleHelper.horizontalAngle(getBlockState().getOptionalValue(BlazeBurnerBlock.FACING)
+                    .orElse(Direction.SOUTH)) + 180) % 360, .125f, LerpedFloat.Chaser.EXP);
+            headAngle.tickChaser();
+        }
+
+        headAnimation.chase(active ? 1 : 0, .25f, LerpedFloat.Chaser.exp(.25f));
+        headAnimation.tickChaser();
+    }
+
 
     public void resetRecipe(){
         this.currentRecipe = null;

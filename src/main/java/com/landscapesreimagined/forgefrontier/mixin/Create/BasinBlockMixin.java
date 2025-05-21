@@ -18,9 +18,10 @@ public class BasinBlockMixin {
 
     @Shadow(remap = false) public BasinInventory inputInventory;
 
-    //fixme: will break in Create 6
-    @Inject(method = "<init>", at = @At(value = "RETURN"), remap = false)
-    public void redirectThing(BlockEntityType type, BlockPos pos, BlockState state, CallbackInfo ci){
-        this.inputInventory.withMaxStackSize(64);
-    }
+    //prevfixme: will break in Create 6
+    //resolved: or not
+//    @Inject(method = "<init>", at = @At(value = "RETURN"), remap = false)
+//    public void redirectThing(BlockEntityType type, BlockPos pos, BlockState state, CallbackInfo ci){
+//        this.inputInventory.withMaxStackSize(64);
+//    }
 }

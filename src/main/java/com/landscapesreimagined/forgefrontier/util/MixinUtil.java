@@ -51,21 +51,21 @@ public class MixinUtil {
 
     public static TransportedItemStack setFromDDItemStack(DDTransportedItemStack fromStack, TransportedItemStack resultStack, boolean useDDTime){
 
-    resultStack.angle = ((TransportedItemStack) fromStack).angle;
-    resultStack.insertedFrom = ((TransportedItemStack) fromStack).insertedFrom;
-    resultStack.beltPosition = ((TransportedItemStack) fromStack).beltPosition;
-    resultStack.insertedAt = ((TransportedItemStack) fromStack).insertedAt;
-    resultStack.locked = ((TransportedItemStack) fromStack).locked;
-    resultStack.lockedExternally = ((TransportedItemStack) fromStack).lockedExternally;
-    resultStack.prevBeltPosition = ((TransportedItemStack) fromStack).prevBeltPosition;
-    resultStack.prevSideOffset = ((TransportedItemStack) fromStack).prevSideOffset;
-    resultStack.processingTime = (fromStack).processingTime;
-    resultStack.sideOffset = ((TransportedItemStack) fromStack).sideOffset;
-    resultStack.processedBy = ((TransportedItemStack) fromStack).processedBy;
-    ((IndustrialProcessingTransportedItem) resultStack).setIndustrialProcessingType(((IndustrialProcessingTransportedItem)fromStack).getIndustrialProcessingType());
+        resultStack.angle = ((TransportedItemStack) fromStack).angle;
+        resultStack.insertedFrom = ((TransportedItemStack) fromStack).insertedFrom;
+        resultStack.beltPosition = ((TransportedItemStack) fromStack).beltPosition;
+        resultStack.insertedAt = ((TransportedItemStack) fromStack).insertedAt;
+        resultStack.locked = ((TransportedItemStack) fromStack).locked;
+        resultStack.lockedExternally = ((TransportedItemStack) fromStack).lockedExternally;
+        resultStack.prevBeltPosition = ((TransportedItemStack) fromStack).prevBeltPosition;
+        resultStack.prevSideOffset = ((TransportedItemStack) fromStack).prevSideOffset;
+        resultStack.processingTime = (fromStack).processingTime;
+        resultStack.sideOffset = ((TransportedItemStack) fromStack).sideOffset;
+        resultStack.processedBy = ((TransportedItemStack) fromStack).processedBy;
+        ((IndustrialProcessingTransportedItem) resultStack).setIndustrialProcessingType(((IndustrialProcessingTransportedItem)fromStack).getIndustrialProcessingType());
 
 
-    return resultStack;
+        return resultStack;
 
     }
 

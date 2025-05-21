@@ -1,6 +1,7 @@
 package com.landscapesreimagined.forgefrontier.mixin.Create;
 
 import com.landscapesreimagined.forgefrontier.mixinInterfaces.IndustrialProcessingTransportedItem;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
@@ -51,21 +52,15 @@ public class TransportedItemStackMixin implements IndustrialProcessingTransporte
 
     @Inject(method = "serializeNBT", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V", ordinal = 2, remap = true), remap = false, locals = LocalCapture.CAPTURE_FAILHARD)
     public void serializeIndustrialProcessingType(CallbackInfoReturnable<CompoundTag> cir, CompoundTag nbt){
-        ResourceLocation id = FanProcessingTypeRegistry.getId(this.processedBy);
-        nbt.putString("processedBy", (Objects.requireNonNull(id == null ? FanProcessingTypeRegistry.getId(AllFanProcessingTypes.NONE) : id)).toString());
         ResourceLocation ddId = DDFanProcessingTypeRegistry.getId(this.forgefrontier$industrialProcessingType);
         nbt.putString("industrialProcessedBy", (Objects.requireNonNull(ddId == null ? DDFanProcessingTypeRegistry.getId(IndustrialTypeFanProcessing.NONE) : ddId)).toString());
     }
 
     @Inject(method = "read", at = @At(value="RETURN"), remap = false, locals = LocalCapture.CAPTURE_FAILHARD)
     private static void readProcessedBy(CompoundTag nbt, CallbackInfoReturnable<TransportedItemStack> cir, TransportedItemStack stack){
-        ResourceLocation processedByID = ResourceLocation.tryParse(nbt.getString("processedBy"));
         ResourceLocation DDProcessedByID = ResourceLocation.tryParse(nbt.getString("industrialProcessedBy"));
 
-        FanProcessingType cType = FanProcessingTypeRegistry.getType(processedByID);
         InterfaceIndustrialProcessingType ddType = DDFanProcessingTypeRegistry.getType(DDProcessedByID);
-
-        stack.processedBy = cType;
         ((IndustrialProcessingTransportedItem) stack).setIndustrialProcessingType(ddType);
     }
 
