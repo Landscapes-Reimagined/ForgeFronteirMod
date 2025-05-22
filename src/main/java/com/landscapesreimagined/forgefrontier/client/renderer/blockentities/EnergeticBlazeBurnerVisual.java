@@ -1,6 +1,9 @@
 package com.landscapesreimagined.forgefrontier.client.renderer.blockentities;
 
+import com.landscapesreimagined.forgefrontier.ForgeFrontier;
+import com.landscapesreimagined.forgefrontier.ModBlocks.EnergeticBlazeBurner;
 import com.landscapesreimagined.forgefrontier.ModBlocks.ModBlockEntities.EnergeticBlazeBurnerBlockEntity;
+import com.landscapesreimagined.forgefrontier.client.renderer.models.ForgeFronteirPartialModels;
 import com.landscapesreimagined.forgefrontier.mixin.Create.BlazeBunerBlockEntityAccessor;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
@@ -34,6 +37,7 @@ import java.util.function.Consumer;
 public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<EnergeticBlazeBurnerBlockEntity> implements SimpleDynamicVisual, SimpleTickableVisual {
 
     private BlazeBurnerBlock.HeatLevel heatLevel;
+    private EnergeticBlazeBurner.EnergyLevel energyLevel;
 
     private final TransformedInstance head;
 
@@ -49,6 +53,8 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
     private TransformedInstance goggles;
     @Nullable
     private TransformedInstance hat;
+    @Nullable
+    private TransformedInstance underLayer;
 
     private boolean validBlockAbove;
 
@@ -56,22 +62,24 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
         super(ctx, blockEntity, partialTick);
 
         heatLevel = BlazeBurnerBlock.HeatLevel.SMOULDERING;
+        energyLevel = EnergeticBlazeBurner.EnergyLevel.SLEEPING;
         validBlockAbove = blockEntity.isValidBlockAbove();
 
-        PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, validBlockAbove);
-        isInert = blazeModel == AllPartialModels.BLAZE_INERT;
+        PartialModel blazeModel = EnergeticBlazeBurnerRenderer.getEnergeticBlazeModel(heatLevel, energyLevel, validBlockAbove);
+        isInert = blazeModel == ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
 
         head = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
                 .createInstance();
 
         head.light(LightTexture.FULL_BRIGHT);
 
+
         animate(partialTick);
     }
 
     @Override
     public void tick(TickableVisual.Context context) {
-        ((BlazeBunerBlockEntityAccessor) blockEntity).tickAnimation();
+        ((BlazeBunerBlockEntityAccessor) blockEntity).invokeTickAnimation();
     }
 
     @Override
@@ -88,16 +96,18 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
 
         boolean validBlockAbove = animation > 0.125f;
         BlazeBurnerBlock.HeatLevel heatLevel = blockEntity.getHeatLevelForRender();
+        EnergeticBlazeBurner.EnergyLevel energyLevel = blockEntity.getEnergyLevelFromBlock();
 
-        if (validBlockAbove != this.validBlockAbove || heatLevel != this.heatLevel) {
+        if (validBlockAbove != this.validBlockAbove || (heatLevel != this.heatLevel || energyLevel != this.energyLevel)) {
             this.validBlockAbove = validBlockAbove;
 
-            PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, validBlockAbove);
+            PartialModel blazeModel = EnergeticBlazeBurnerRenderer.getEnergeticBlazeModel(heatLevel, energyLevel, validBlockAbove);
             instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
                     .stealInstance(head);
 
             boolean needsRods = heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING);
             boolean hasRods = this.heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING);
+            boolean needsUnderModel = EnergeticBlazeBurnerRenderer.partialBlazeModelNeedsUnderLayer(blazeModel);
 
             if (needsRods && !hasRods) {
                 PartialModel rodsModel = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS
@@ -122,7 +132,22 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
                 largeRods = null;
             }
 
+            if(needsUnderModel && underLayer == null){
+                underLayer = instancerProvider()
+                        .instancer(InstanceTypes.TRANSFORMED,
+                                Models.partial( validBlockAbove ?
+                                        ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_ON :
+                                        ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ON)
+                        )
+                        .createInstance();
+                underLayer.light(LightTexture.FULL_BRIGHT);
+            }else if(!needsUnderModel && underLayer != null){
+                underLayer.delete();
+                underLayer = null;
+            }
+
             this.heatLevel = heatLevel;
+            this.energyLevel = energyLevel;
         }
 
         // Switch between showing/hiding the flame
@@ -146,8 +171,8 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
         if (hatPresent && hat == null) {
             hat = instancerProvider()
                     .instancer(InstanceTypes.TRANSFORMED,
-                            Models.partial(
-                                    blockEntity.stockKeeper ? AllPartialModels.LOGISTICS_HAT : AllPartialModels.TRAIN_HAT))
+                        Models.partial(
+                                blockEntity.stockKeeper ? AllPartialModels.LOGISTICS_HAT : AllPartialModels.TRAIN_HAT))
                     .createInstance();
             hat.light(LightTexture.FULL_BRIGHT);
         } else if (!hatPresent && hat != null) {
@@ -158,7 +183,7 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
         var hashCode = blockEntity.hashCode();
         float time = AnimationTickHolder.getRenderTime(level);
         float renderTick = time + (hashCode % 13) * 16f;
-        float offsetMult = heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) ? 64 : 16;
+        float offsetMult = (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) || energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.SLEEPY)) ? 64 : 16;
         float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;
         float headY = offset - (animation * .75f);
 
@@ -171,6 +196,16 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
                 .rotateY(horizontalAngle)
                 .translateBack(Translate.CENTER)
                 .setChanged();
+
+        if(underLayer != null){
+            underLayer.setIdentityTransform()
+                    .translate(getVisualPosition())
+                    .translateY(headY)
+                    .translate(Translate.CENTER)
+                    .rotateY(horizontalAngle)
+                    .translateBack(Translate.CENTER)
+                    .setChanged();
+        }
 
         if (goggles != null) {
             goggles.setIdentityTransform()
@@ -271,6 +306,9 @@ public class EnergeticBlazeBurnerVisual extends AbstractBlockEntityVisual<Energe
         }
         if (hat != null) {
             hat.delete();
+        }
+        if(underLayer != null){
+            underLayer.delete();
         }
     }
 }
