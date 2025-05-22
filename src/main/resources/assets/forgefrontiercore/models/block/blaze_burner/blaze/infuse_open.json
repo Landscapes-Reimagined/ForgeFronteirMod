@@ -5,6 +5,7 @@
 		"4": "forgefrontiercore:block/energetic_blaze_infuse_open_off_2",
 		"particle": "forgefrontiercore:block/energetic_blaze_infuse_open_off"
 	},
+	"render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"name": "Blaze 5",

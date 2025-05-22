@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface BlazeBunerBlockEntityAccessor {
 
     @Invoker(value = "tickAnimation")
-    void tickAnimation();
+    void invokeTickAnimation();
 
 }

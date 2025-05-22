@@ -163,7 +163,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             draw(flameBuffer, horizontalAngle, ms, cutout);
         }
 
-        PartialModel blazeModel = getPartialModel(heatLevel, energyLevel, blockAbove);
+        PartialModel blazeModel = getEnergeticBlazeModel(heatLevel, energyLevel, blockAbove);
 
 
 
@@ -242,11 +242,11 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
         ms.popPose();
     }
 
-    private static boolean isSmallBlaze(PartialModel blazeModel) {
+    public static boolean isSmallBlaze(PartialModel blazeModel) {
         return blazeModel == ForgeFronteirPartialModels.BLAZE_INERT || blazeModel == ForgeFronteirPartialModels.ENERGETIC_BLAZE_SLEEPING;
     }
 
-    private static PartialModel getPartialModel(BlazeBurnerBlock.HeatLevel heatLevel, EnergeticBlazeBurner.EnergyLevel energyLevel, boolean blockAbove) {
+    public static PartialModel getEnergeticBlazeModel(BlazeBurnerBlock.HeatLevel heatLevel, EnergeticBlazeBurner.EnergyLevel energyLevel, boolean blockAbove) {
         PartialModel blazeModel;
         if (energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.INFUSE)) {
 
@@ -281,7 +281,7 @@ public class EnergeticBlazeBurnerRenderer extends SafeBlockEntityRenderer<Energe
             ForgeFronteirPartialModels.ENERGETIC_BLAZE_INFUSE_ACTIVE_SUPERHEATED
     };
 
-    private static boolean partialBlazeModelNeedsUnderLayer(PartialModel model){
+    public static boolean partialBlazeModelNeedsUnderLayer(PartialModel model){
         for(var p : UNDER_LAYER_REQUIRED){
             if(p == model){
                 return true;

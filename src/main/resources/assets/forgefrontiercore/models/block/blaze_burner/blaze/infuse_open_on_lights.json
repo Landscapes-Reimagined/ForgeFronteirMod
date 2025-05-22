@@ -5,6 +5,7 @@
 		"3": "forgefrontiercore:block/energetic_blaze_infuse_lights",
 		"particle": "forgefrontiercore:block/energetic_blaze_infuse_lights"
 	},
+	"render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"name": "Blaze 5",

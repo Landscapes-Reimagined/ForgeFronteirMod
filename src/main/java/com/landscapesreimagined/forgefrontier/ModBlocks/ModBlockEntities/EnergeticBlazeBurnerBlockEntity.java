@@ -31,6 +31,7 @@ import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.client.Minecraft;
@@ -194,7 +195,10 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             //play a sound?
             //Do rendering stuff?
             //idk
-            tickAnimation();
+//            tickAnimation();
+            if(!VisualizationManager.supportsVisualization(level)){
+                ((BlazeBunerBlockEntityAccessor) this).invokeTickAnimation();
+            }
 
             return;
         }
@@ -391,40 +395,6 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
             this.resetRecipe();
         }
 
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    void tickAnimation() {
-        boolean active = getHeatLevelFromBlock().isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) && isValidBlockAbove();
-
-        if (!active) {
-            float target = 0;
-            LocalPlayer player = Minecraft.getInstance().player;
-            if (player != null && !player.isInvisible()) {
-                double x;
-                double z;
-                if (isVirtual()) {
-                    x = -4;
-                    z = -10;
-                } else {
-                    x = player.getX();
-                    z = player.getZ();
-                }
-                double dx = x - (getBlockPos().getX() + 0.5);
-                double dz = z - (getBlockPos().getZ() + 0.5);
-                target = AngleHelper.deg(-Mth.atan2(dz, dx)) - 90;
-            }
-            target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);
-            headAngle.chase(target, .25f, LerpedFloat.Chaser.exp(5));
-            headAngle.tickChaser();
-        } else {
-            headAngle.chase((AngleHelper.horizontalAngle(getBlockState().getOptionalValue(BlazeBurnerBlock.FACING)
-                    .orElse(Direction.SOUTH)) + 180) % 360, .125f, LerpedFloat.Chaser.EXP);
-            headAngle.tickChaser();
-        }
-
-        headAnimation.chase(active ? 1 : 0, .25f, LerpedFloat.Chaser.exp(.25f));
-        headAnimation.tickChaser();
     }
 
 
@@ -764,6 +734,14 @@ public class EnergeticBlazeBurnerBlockEntity extends BlazeBurnerBlockEntity impl
 
     public EnergeticBlazeBurner.EnergyLevel getEnergyLevelFromBlock() {
         return EnergeticBlazeBurner.getEnergyLevelOf(this.getBlockState());
+    }
+
+    public BlazeBurnerBlock.HeatLevel getHeatLevelForRender() {
+        BlazeBurnerBlock.HeatLevel heatLevel = getHeatLevelFromBlock();
+        EnergeticBlazeBurner.EnergyLevel energyLevel = getEnergyLevelFromBlock();
+        if ((!heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING) || !energyLevel.isAtLeast(EnergeticBlazeBurner.EnergyLevel.SLEEPY)) && stockKeeper)
+            return BlazeBurnerBlock.HeatLevel.FADING;
+        return heatLevel;
     }
 
 //    @Override
